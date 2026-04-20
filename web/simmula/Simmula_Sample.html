@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APX T2 Operations Optimization Simulation — AI vs Current</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+/* ── VARIABLES ── */
+:root {
+  --radius: 16px; --radius-sm: 10px;
+  --blue:#007AFF; --green:#34C759; --red:#FF3B30;
+  --orange:#FF9500; --purple:#AF52DE; --teal:#5AC8FA;
+}
+[data-theme="light"] {
+  --bg:#F2F2F7; --bg2:#FFFFFF; --bg3:#F2F2F7; --bg4:#E5E5EA;
+  --text:#000000; --text2:rgba(60,60,67,.6); --text3:rgba(60,60,67,.36);
+  --sep:rgba(60,60,67,.18); --shadow:0 1px 6px rgba(0,0,0,.08);
+  --blue-bg:rgba(0,122,255,.08); --green-bg:rgba(52,199,89,.08);
+  --red-bg:rgba(255,59,48,.08); --orange-bg:rgba(255,149,0,.08);
+}
+[data-theme="dark"] {
+  --bg:#000000; --bg2:#1C1C1E; --bg3:#2C2C2E; --bg4:#3A3A3C;
+  --text:#FFFFFF; --text2:rgba(235,235,245,.6); --text3:rgba(235,235,245,.36);
+  --sep:rgba(84,84,88,.45); --shadow:0 2px 14px rgba(0,0,0,.5);
+  --blue:#0A84FF; --green:#30D158; --red:#FF453A;
+  --orange:#FF9F0A; --purple:#BF5AF2; --teal:#64D2FF;
+  --blue-bg:rgba(10,132,255,.12); --green-bg:rgba(48,209,88,.10);
+  --red-bg:rgba(255,69,58,.10); --orange-bg:rgba(255,159,10,.10);
+}
+
+/* ── RESET ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Pretendard','Inter',-apple-system,sans-serif;font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased;transition:background .2s,color .2s;}
+.num{font-family:'Inter',-apple-system,sans-serif;font-variant-numeric:tabular-nums;}
+
+/* ── HEADER ── */
+.hdr{background:var(--bg2);border-bottom:1px solid var(--sep);padding:18px 20px 0;position:sticky;top:0;z-index:100;backdrop-filter:blur(20px);transition:background .2s,border-color .2s;}
+.hdr-top{display:flex;justify-content:space-between;align-items:flex-start;margin:0 auto 12px;gap:12px;max-width:1260px;}
+.hdr-title{font-size:17px;font-weight:700;letter-spacing:-.3px;}
+.hdr-title span{color:var(--blue);}
+.hdr-meta{display:flex;gap:14px;margin-top:3px;flex-wrap:wrap;}
+.hdr-meta span{font-size:11px;color:var(--text2);}
+.hdr-meta b{color:var(--text);font-weight:600;}
+.hdr-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.pill{display:inline-flex;align-items:center;gap:4px;padding:3px 11px;border-radius:20px;font-size:11px;font-weight:700;}
+.pill-base{background:var(--orange-bg);color:var(--orange);}
+.pill-ai{background:var(--blue-bg);color:var(--blue);}
+.btn-theme{width:34px;height:34px;border-radius:50%;background:var(--bg3);border:none;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:background .2s;color:var(--text);}
+.btn-theme:hover{background:var(--bg4);}
+
+/* ── NAV ── */
+.nav{display:flex;overflow-x:auto;scrollbar-width:none;max-width:1260px;margin:0 auto;justify-content:center;}
+.nav::-webkit-scrollbar{display:none;}
+.nav-btn{padding:9px 18px;border:none;background:none;color:var(--text2);font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;font-family:inherit;}
+.nav-btn:hover{color:var(--text);}
+.nav-btn.active{color:var(--blue);border-bottom-color:var(--blue);font-weight:700;}
+
+/* ── MAIN ── */
+.main{max-width:1260px;margin:0 auto;padding:24px 20px;}
+.tab-pane{display:none;}
+.tab-pane.active{display:block;}
+
+/* ── GRID ── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px;}
+.g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;margin-bottom:14px;}
+.g23{display:grid;grid-template-columns:2fr 3fr;gap:14px;margin-bottom:14px;}
+.mb{margin-bottom:14px;}
+
+/* ── CARD ── */
+.card{background:var(--bg2);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;transition:background .2s;}
+
+/* ── METRIC CARD ── */
+.mc{background:var(--bg2);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 20px;position:relative;overflow:hidden;transition:background .2s;}
+.mc-icon{position:absolute;right:14px;top:14px;font-size:24px;opacity:.1;}
+.mc-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--text3);margin-bottom:5px;}
+.mc-val{font-family:'Inter',sans-serif;font-size:32px;font-weight:800;line-height:1;margin-bottom:4px;}
+.mc-sub{font-size:11px;color:var(--text2);}
+.chip{display:inline-flex;align-items:center;font-size:11px;font-weight:700;padding:2px 8px;border-radius:8px;margin-top:5px;}
+.chip-g{background:var(--green-bg);color:var(--green);}
+.chip-r{background:var(--red-bg);color:var(--red);}
+.chip-b{background:var(--blue-bg);color:var(--blue);}
+.chip-o{background:var(--orange-bg);color:var(--orange);}
+
+/* ── WIN BANNER ── */
+.win{background:linear-gradient(135deg,var(--blue-bg),rgba(0,122,255,.03));border:1.5px solid rgba(0,122,255,.2);border-radius:var(--radius);padding:20px 24px;margin-bottom:14px;display:flex;align-items:center;gap:28px;flex-wrap:wrap;}
+.win-title{font-size:13px;font-weight:800;color:var(--blue);white-space:nowrap;}
+.win-items{display:flex;gap:24px;flex-wrap:wrap;}
+.win-item{text-align:center;}
+.win-num{font-family:'Inter',sans-serif;font-size:26px;font-weight:900;color:var(--blue);line-height:1;}
+.win-lbl{font-size:10px;color:var(--text2);margin-top:2px;}
+
+/* ── CHART ── */
+.ct{font-size:13px;font-weight:700;margin-bottom:2px;}
+.cs{font-size:11px;color:var(--text2);margin-bottom:12px;}
+.cw{position:relative;}
+.leg{display:flex;gap:14px;margin-bottom:10px;flex-wrap:wrap;}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);}
+.leg-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+
+/* ── HEATMAP ── */
+.hm-scroll{overflow-x:auto;}
+.hm{border-collapse:collapse;font-size:10px;width:100%;}
+.hm th{padding:4px 5px;text-align:center;font-weight:500;color:var(--text3);border:1px solid var(--sep);min-width:32px;}
+.hm td{padding:4px 2px;text-align:center;border:1px solid var(--sep);min-width:32px;font-weight:600;}
+.hm .rl{text-align:left;padding:4px 10px 4px 4px;font-weight:700;font-size:11px;color:var(--text);white-space:nowrap;}
+
+/* ── TABLE ── */
+.dt{width:100%;border-collapse:collapse;font-size:13px;}
+.dt th{padding:9px 12px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text2);border-bottom:1.5px solid var(--sep);}
+.dt th.ca{color:var(--blue);}
+.dt td{padding:10px 12px;border-bottom:1px solid var(--sep);color:var(--text);}
+.dt tr:last-child td{border-bottom:none;}
+.dt tr:hover td{background:var(--bg3);}
+.dt td.ca{color:var(--blue);font-weight:700;}
+.tag{display:inline-block;padding:2px 8px;border-radius:7px;font-size:11px;font-weight:700;}
+.tg{background:var(--green-bg);color:var(--green);}
+.tr{background:var(--red-bg);color:var(--red);}
+.tb{background:var(--blue-bg);color:var(--blue);}
+.to{background:var(--orange-bg);color:var(--orange);}
+
+/* ── INSIGHT CARDS ── */
+.ig{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px;}
+.ic{background:var(--bg2);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;border-top:4px solid transparent;}
+.ic.bl{border-top-color:var(--blue);}
+.ic.gr{border-top-color:var(--green);}
+.ic.rd{border-top-color:var(--red);}
+.ic.or{border-top-color:var(--orange);}
+.ic.pu{border-top-color:var(--purple);}
+.ic.te{border-top-color:var(--teal);}
+.ic-num{font-family:'Inter',sans-serif;font-size:24px;font-weight:800;line-height:1;margin-bottom:5px;}
+.ic.bl .ic-num{color:var(--blue);}
+.ic.gr .ic-num{color:var(--green);}
+.ic.rd .ic-num{color:var(--red);}
+.ic.or .ic-num{color:var(--orange);}
+.ic.pu .ic-num{color:var(--purple);}
+.ic.te .ic-num{color:var(--teal);}
+.ic-title{font-size:13px;font-weight:700;margin-bottom:5px;}
+.ic-body{font-size:11px;color:var(--text2);line-height:1.6;}
+
+/* ── TIMELINE ── */
+.tl-wrap{overflow-x:auto;}
+.tl-grid{min-width:680px;}
+.tl-hdr{display:grid;grid-template-columns:90px repeat(24,1fr);margin-bottom:2px;}
+.tl-h{font-size:9px;color:var(--text3);text-align:center;}
+.tl-row{display:grid;grid-template-columns:90px repeat(24,1fr);height:26px;margin-bottom:3px;}
+.tl-lbl{font-size:11px;font-weight:600;color:var(--text2);display:flex;align-items:center;padding-right:6px;}
+.tl-cell{margin:2px 1px;border-radius:3px;}
+.tl-on-b{background:var(--orange);opacity:.75;}
+.tl-on-a{background:var(--blue);opacity:.8;}
+.tl-off{background:var(--bg4);}
+
+/* ── DIVIDER ── */
+hr{border:none;border-top:1px solid var(--sep);margin:16px 0;}
+
+/* ── FOOTER ── */
+.footer{text-align:center;padding:20px;font-size:11px;color:var(--text3);border-top:1px solid var(--sep);margin-top:12px;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .g4{grid-template-columns:1fr 1fr;}
+  .g3{grid-template-columns:1fr 1fr;}
+  .g2,.g23{grid-template-columns:1fr;}
+  .ig{grid-template-columns:1fr;}
+  .main{padding:14px;}
+  .hdr{padding:14px 14px 0;}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-top">
+    <div>
+      <div class="hdr-title">✈ APX T2 Operations Optimization Simulation — <span>AI</span> vs Current</div>
+      <div class="hdr-meta">
+        <span><b>Date:</b> 2026-01-14 (Sat)</span>
+        <span><b>Airport:</b> Metro Gateway Intl Airport T2</span>
+        <span><b>Total Passengers:</b> 44,268 pax</span>
+        <span><b>Flights:</b> 435 flights</span>
+        <span><b>Generated:</b> 2026-04-02</span>
+      </div>
+    </div>
+    <div class="hdr-right">
+      <span class="pill pill-base">Current Plan</span>
+      <span class="pill pill-ai">AI Optimized Plan</span>
+      <button class="btn-theme" id="btnTheme">☀️</button>
+    </div>
+  </div>
+  <nav class="nav" id="navBar">
+    <button class="nav-btn active" data-tab="overview">Overview</button>
+    <button class="nav-btn" data-tab="flow">Hourly Flow</button>
+    <button class="nav-btn" data-tab="bottleneck">Stage Bottlenecks</button>
+    <button class="nav-btn" data-tab="resource">Resource Efficiency</button>
+    <button class="nav-btn" data-tab="insights">Insights &amp; Recommendations</button>
+  </nav>
+</div>
+
+<div class="main">
+
+<!-- ═══ TAB: Overview ═══ -->
+<div id="tab-overview" class="tab-pane active">
+
+  <div class="win">
+    <div class="win-title">🏆 Key Outcomes of AI Optimization</div>
+    <div class="win-items">
+      <div class="win-item"><div class="win-num">-59%</div><div class="win-lbl">At-Risk Boarding Passengers</div></div>
+      <div class="win-item"><div class="win-num">-22%</div><div class="win-lbl">Check-in Counter Operations</div></div>
+      <div class="win-item"><div class="win-num">+16 min</div><div class="win-lbl">Average Boarding Buffer</div></div>
+      <div class="win-item"><div class="win-num">-74%</div><div class="win-lbl">Overtime Passengers</div></div>
+      <div class="win-item"><div class="win-num">-10%</div><div class="win-lbl">Security Screening Wait</div></div>
+    </div>
+  </div>
+
+  <div class="g4">
+    <div class="mc"><div class="mc-icon">🚨</div><div class="mc-label">At-Risk Boarding Passengers</div><div class="mc-val num" style="color:var(--red)">297<span style="font-size:16px"> pax</span></div><div class="mc-sub">AI baseline · 1.6% of total</div><span class="chip chip-g">Current 732 pax -> -59%</span></div>
+    <div class="mc"><div class="mc-icon">🛫</div><div class="mc-label">Average Boarding Buffer(Dwell)</div><div class="mc-val num" style="color:var(--blue)">133.7<span style="font-size:16px"> min</span></div><div class="mc-sub">AI baseline</div><span class="chip chip-g">Current 117.8 min -> +15.9 min</span></div>
+    <div class="mc"><div class="mc-icon">⏱</div><div class="mc-label">Total Average Wait</div><div class="mc-val num" style="color:var(--green)">30.8<span style="font-size:16px"> min</span></div><div class="mc-sub">AI baseline · combined across 4 stages</div><span class="chip chip-g">Current 31.8 min -> -1.0 min</span></div>
+    <div class="mc"><div class="mc-icon">🖥️</div><div class="mc-label">Counter Operation Reduction</div><div class="mc-val num" style="color:var(--orange)">685<span style="font-size:16px"> hours</span></div><div class="mc-sub">Counter-hours reduced</div><span class="chip chip-g">3,118h → 2,432h (-22%)</span></div>
+  </div>
+
+  <div class="g23">
+    <div class="card">
+      <div class="ct">Overall Performance Comparison (6 Dimensions)</div>
+      <div class="cs">Normalized score 0-100 · higher is better</div>
+      <div class="cw" style="height:280px"><canvas id="c_radar"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="ct">Core KPI Improvements — AI vs Current</div>
+      <div class="cs">Improvement versus the current plan</div>
+      <div class="cw" style="height:280px"><canvas id="c_improv"></canvas></div>
+    </div>
+  </div>
+
+  <div class="g3">
+    <div class="card">
+      <div class="ct">At-Risk Passenger Comparison</div>
+      <div class="cs">Based on Dwell &lt; 15 min</div>
+      <div class="cw" style="height:180px"><canvas id="c_risk_ov"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="ct">Passenger Profile Distribution</div>
+      <div class="cs">Based on all 44,268 passengers</div>
+      <div class="cw" style="height:180px"><canvas id="c_profile"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="ct">Passengers by Carrier (Top 6)</div>
+      <div class="cs">Carrier-A accounts for 66.8% of total</div>
+      <div class="cw" style="height:180px"><canvas id="c_carrier"></canvas></div>
+    </div>
+  </div>
+
+</div><!-- /overview -->
+
+<!-- ═══ TAB: FLOW ═══ -->
+<div id="tab-flow" class="tab-pane">
+  <div class="card mb">
+    <div class="ct">Hourly Terminal Inbound Passengers</div>
+    <div class="cs">Peak: 03:00 (3,166) · 2nd peak: 16:00 (2,953)</div>
+    <div class="cw" style="height:170px"><canvas id="c_pax"></canvas></div>
+  </div>
+  <div class="card mb">
+    <div class="ct">Hourly Average Security Wait</div>
+    <div class="cs">AI optimization: up to <b>79% reduction</b> from 06-10 · improved PM peak</div>
+    <div class="leg">
+      <div class="leg-item"><div class="leg-dot" style="background:var(--orange)"></div>Current Plan</div>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--blue)"></div>AI Optimized Plan</div>
+    </div>
+    <div class="cw" style="height:240px"><canvas id="c_sec_h"></canvas></div>
+  </div>
+  <div class="card mb">
+    <div class="ct">Hourly Average Check-in Wait</div>
+    <div class="cs">Shared peaks at 04:00 and 17:00 · AI improves selected late-night and PM windows</div>
+    <div class="cw" style="height:220px"><canvas id="c_ci_h"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="ct">Hourly Security Wait Heatmap</div>
+    <div class="cs">Value = average wait (min) · 🟢 0-5 · 🟡 5-10 · 🟠 10-20 · 🔴 20+</div>
+    <div class="hm-scroll" id="heatmapBox" style="margin-top:10px"></div>
+  </div>
+</div><!-- /flow -->
+
+<!-- ═══ TAB: BOTTLENECK ═══ -->
+<div id="tab-bottleneck" class="tab-pane">
+  <div class="g2">
+    <div class="card">
+      <div class="ct">Average Wait by Stage</div>
+      <div class="cs">Current vs AI · meaningful gains at security</div>
+      <div class="cw" style="height:230px"><canvas id="c_step"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="ct">Stage Wait Summary & Dwell Comparison</div>
+      <table class="dt" style="margin-top:6px">
+        <thead><tr><th>Stage</th><th>Current</th><th class="ca">AI</th><th>Improvement</th></tr></thead>
+        <tbody>
+          <tr><td>Travel Tax</td><td>0.0 min</td><td class="ca">0.0 min</td><td><span class="tag to">±0</span></td></tr>
+          <tr><td>Check-in</td><td>22.4 min</td><td class="ca">22.3 min</td><td><span class="tag tg">-0.4%</span></td></tr>
+          <tr><td>Immigration</td><td>0.1 min</td><td class="ca">0.1 min</td><td><span class="tag to">±0</span></td></tr>
+          <tr><td><b>Security</b></td><td><b>9.3 min</b></td><td class="ca"><b>8.4 min</b></td><td><span class="tag tg">-10%</span></td></tr>
+          <tr style="border-top:2px solid var(--sep)"><td><b>Total</b></td><td><b>31.8 min</b></td><td class="ca"><b>30.8 min</b></td><td><span class="tag tg">-3.1%</span></td></tr>
+        </tbody>
+      </table>
+      <hr>
+      <div class="ct" style="margin-bottom:6px">Dwell (Boarding Buffer) Comparison</div>
+      <table class="dt">
+        <thead><tr><th>Metric</th><th>Current</th><th class="ca">AI</th></tr></thead>
+        <tbody>
+          <tr><td>Average</td><td>117.8 min</td><td class="ca">133.7 min (+15.9)</td></tr>
+          <tr><td>P5 (Bottom 5%)</td><td><span style="color:var(--red)">25.2 min</span></td><td class="ca">49.5 min (+96%)</td></tr>
+          <tr><td>At-risk passengers</td><td><span style="color:var(--red)">732 pax (4.0%)</span></td><td class="ca">297 pax (1.6%)</td></tr>
+          <tr><td>Negative Dwell</td><td><span style="color:var(--red)">551 pax</span></td><td class="ca">143 pax (-74%)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="ct">Check-in Zone Allocation (AI)</div>
+      <div class="cs">56% concentrated in Zone A — structural issue unresolved even with AI</div>
+      <div class="cw" style="height:210px"><canvas id="c_ci_donut"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="ct">Counter-Hours by Check-in Zone</div>
+      <div class="cs">Counter-hours · AI significantly reduces Zone C/D/E</div>
+      <div class="cw" style="height:210px"><canvas id="c_zone_cmp"></canvas></div>
+    </div>
+  </div>
+  <div class="card mb">
+    <div class="ct">Security Lane Structure Comparison</div>
+    <div class="cs">AI: LANE_PRM + LANE_CREW → LANE_PRM_CREW merged · same total capacity, better deployment efficiency</div>
+    <div class="cw" style="height:190px"><canvas id="c_sec_zone"></canvas></div>
+  </div>
+</div><!-- /bottleneck -->
+
+<!-- ═══ TAB: Resource Efficiency ═══ -->
+<div id="tab-resource" class="tab-pane">
+  <div class="g3">
+    <div class="mc"><div class="mc-icon">🖥️</div><div class="mc-label">Current Counter-Hours</div><div class="mc-val num" style="color:var(--orange)">3,118<span style="font-size:15px">h</span></div><div class="mc-sub">Average 111 counters active simultaneously</div></div>
+    <div class="mc"><div class="mc-icon">✅</div><div class="mc-label">AI Counter-Hours</div><div class="mc-val num" style="color:var(--blue)">2,432<span style="font-size:15px">h</span></div><div class="mc-sub">Average 87 counters active simultaneously</div><span class="chip chip-g">-685 hours (-22%)</span></div>
+    <div class="mc"><div class="mc-icon">👤</div><div class="mc-label">Average Counter Reduction</div><div class="mc-val num" style="color:var(--green)">-24<span style="font-size:15px"> units</span></div><div class="mc-sub">about 86 staff-equivalent/day on an 8-hour shift basis</div><span class="chip chip-g">Service quality also improved</span></div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="ct">Counter-Hours by Zone</div>
+      <div class="cs">AI: Zone A unchanged · Zone C -25% · Zone D -43% · Zone E -56%</div>
+      <div class="cw" style="height:240px"><canvas id="c_ch_zone"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="ct">Reduction Rate by Zone (%)</div>
+      <div class="cs">Reduction concentrated in low-demand zones</div>
+      <div class="cw" style="height:240px"><canvas id="c_ch_pct"></canvas></div>
+    </div>
+  </div>
+  <div class="card mb">
+    <div class="ct">Dynamic Scheduling — Current vs AI Operating Pattern</div>
+    <div class="cs">Zone E counter example · current stays always open · AI opens only during demand windows</div>
+    <div class="tl-wrap" style="margin-top:12px"><div class="tl-grid" id="tlBox"></div></div>
+    <div class="leg" style="margin-top:8px">
+      <div class="leg-item"><div style="width:13px;height:13px;border-radius:3px;background:var(--orange);opacity:.75"></div><span>Current — Active (always open)</span></div>
+      <div class="leg-item"><div style="width:13px;height:13px;border-radius:3px;background:var(--blue);opacity:.8"></div><span>AI — Active (demand windows)</span></div>
+      <div class="leg-item"><div style="width:13px;height:13px;border-radius:3px;background:var(--bg4)"></div><span>Inactive (saved)</span></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">Resource Efficiency Summary — All Stages</div>
+    <div class="cs">Keep unconstrained stages unchanged · precise reduction only at overstaffed check-in</div>
+    <table class="dt" style="margin-top:10px">
+      <thead><tr><th>Stage</th><th>Current</th><th class="ca">AI</th><th>Reduction</th><th>Reduction Rate</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td><b>Check-in</b></td><td>3,117.5h</td><td class="ca">2,432.0h</td><td><span class="tag tg">-685.5h</span></td><td><span class="tag tg">-22%</span></td><td>Dynamic reduction in Zone C/D/E</td></tr>
+        <tr><td>Security</td><td>448.0h</td><td class="ca">448.0h</td><td><span class="tag to">±0</span></td><td><span class="tag to">0%</span></td><td>Same total capacity · lane structure reconfigured</td></tr>
+        <tr><td>Immigration</td><td>980.0h</td><td class="ca">980.0h</td><td><span class="tag to">±0</span></td><td><span class="tag to">0%</span></td><td>No bottleneck · no change required</td></tr>
+        <tr style="background:var(--blue-bg)"><td><b>Overall</b></td><td><b>4,545.5h</b></td><td class="ca"><b>3,860.0h</b></td><td><span class="tag tg">-685.5h</span></td><td><span class="tag tg">-15.1%</span></td><td><b>Service quality also improved</b></td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:12px;padding:12px;background:var(--blue-bg);border-radius:var(--radius-sm)">
+      <p style="font-size:12px"><b style="color:var(--blue)">Key:</b> AI leaves already-stable immigration (0.1 min) and security (same total capacity) untouched, and dynamically adjusts only overstaffed check-in Zones C/D/E to demand.</p>
+    </div>
+  </div>
+</div><!-- /resource -->
+
+<!-- ═══ TAB: INSIGHTS ═══ -->
+<div id="tab-insights" class="tab-pane">
+  <div class="ig">
+    <div class="ic bl"><div class="ic-num">-22%</div><div class="ic-title">Use Less, Perform Better</div><div class="ic-body">Reduced check-in counters by 685 hours (-22%) while simultaneously cutting at-risk passengers by 59%. Equivalent to about 86 staff/day in labor savings (8-hour shifts). AI disproves the belief that service improves only by increasing staffing.</div></div>
+    <div class="ic rd"><div class="ic-num">-59%</div><div class="ic-title">Boarding Safety Is the Biggest Gain</div><div class="ic-body">At-risk passengers dropped from 732 to 297, and negative Dwell from 551 to 143 (-74%). The impact is much larger than the average wait-time reduction (1 min). This is a key result for reducing missed-boarding risk.</div></div>
+    <div class="ic gr"><div class="ic-num">+96%</div><div class="ic-title">Most Constrained Passengers Get 2x Buffer</div><div class="ic-body">Dwell P5 (bottom 5% buffer) doubled from 25.2 to 49.5 minutes. AI reduced waits during peak windows to protect passengers in the most vulnerable conditions.</div></div>
+    <div class="ic or"><div class="ic-num">56%</div><div class="ic-title">Zone A — Structural Constraint Beyond AI</div><div class="ic-body">56% of all check-in demand is concentrated in Zone A. AI reduced Zone E by 55.8%, but could not reduce a single counter in Zone A. This suggests structural limits in carrier allocation or terminal flow and warrants policy review.</div></div>
+    <div class="ic pu"><div class="ic-num">11 blocks</div><div class="ic-title">Dynamic Scheduling Is the Core Mechanism</div><div class="ic-body">Current operations use a single always-on/off block. AI splits Zone B-E counters into up to 11 time blocks, opening/closing by demand. This fine-grained control enables both 22% savings and 59% safety improvement.</div></div>
+    <div class="ic te"><div class="ic-num">0%</div><div class="ic-title">Why Immigration/Security Were Left Unchanged</div><div class="ic-body">Immigration wait is 0.1 min with no bottleneck. Security keeps total staffing while only lane structure is adjusted. This reflects selective optimization based on bottleneck diagnosis, not blind cost-cutting.</div></div>
+  </div>
+  <div class="card">
+    <div class="ct">Action Roadmap</div>
+    <div class="cs">From immediate actions to mid/long-term initiatives</div>
+    <table class="dt" style="margin-top:10px">
+      <thead><tr><th>Priority</th><th>Timing</th><th>Task</th><th>Expected Impact</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag tr">1Priority</span></td><td>Immediate</td><td>Deploy AI-optimized counter schedule on site</td><td>At-risk passengers -59%, labor cost -22%</td></tr>
+        <tr><td><span class="tag tr">2Priority</span></td><td>Immediate</td><td>Integrate security LANE_PRM_CREW lane</td><td>Up to 79% wait reduction in AM peak</td></tr>
+        <tr><td><span class="tag tb">P3</span></td><td>Short-term (1-3 months)</td><td>Review passenger distribution policy for Zone A</td><td>Relieve check-in peak bottleneck</td></tr>
+        <tr><td><span class="tag tb">P4</span></td><td>Short-term</td><td>Apply dynamic counters for 16:00-17:00 peak</td><td>Reduce second-peak check-in waits</td></tr>
+        <tr><td><span class="tag to">5Priority</span></td><td>Mid/Long-term</td><td>Expand terminal processing-capacity infrastructure</td><td>Completion rate target: 41% -> 60%+</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div><!-- /insights -->
+
+</div><!-- /main -->
+<div class="footer">APX T2 Operations Optimization Simulation Analysis · as of 2026-01-14 · generated 2026-04-02</div>
+
+<script>
+/* ══ DATA ══ */
+const HOURS = Array.from({length:24},(_,i)=>String(i).padStart(2,'0')+':00');
+const SEC = {
+  base:[0.3,0.4,5.5,13.7,16.7,17.3,21.5,22.5,22.5,17.1,22.0,17.1,11.2,11.9,17.4,17.3,27.1,21.4,9.4,9.5,8.2,3.9,1.4,2.0],
+  ai:  [0.0,0.1,2.8,7.9,7.9,6.0,5.6,4.7,4.9,5.4,5.9,2.7,0.9,1.3,3.9,4.6,14.4,18.0,12.9,12.9,13.2,5.6,0.2,0.0]
+};
+const CI = {
+  base:[4.2,1.7,3.3,16.8,37.9,20.9,10.3,3.9,4.4,8.6,13.6,9.5,8.2,2.6,7.8,5.0,7.6,25.2,21.1,9.7,19.0,13.6,14.8,16.5],
+  ai:  [1.1,0.5,3.0,18.1,38.2,21.6,12.7,5.8,3.5,6.9,14.5,9.7,9.0,3.8,8.9,8.4,9.9,23.6,13.7,5.6,10.2,9.9,14.2,9.9]
+};
+const PAX=[638,1342,2783,3166,2622,2095,1992,2000,2092,2682,2121,1556,1350,1998,2481,2198,2953,1857,1173,1211,1962,1271,364,361];
+
+/* ══ CHARTS STORE ══ */
+const CH = {};
+function mk(id, cfg) {
+  if (CH[id]) { CH[id].destroy(); delete CH[id]; }
+  const el = document.getElementById(id);
+  if (!el) return;
+  cfg = cfg || {};
+  cfg.options = cfg.options || {};
+  cfg.options.animation = false;
+  cfg.options.animations = {};
+  CH[id] = new Chart(el, cfg);
+}
+
+/* ══ THEME ══ */
+let theme = 'light';
+function C() {
+  const d = theme === 'dark';
+  return {
+    base: d ? '#FF9F0A' : '#FF9500',
+    ai:   d ? '#0A84FF' : '#007AFF',
+    green:d ? '#30D158' : '#34C759',
+    red:  d ? '#FF453A' : '#FF3B30',
+    pur:  d ? '#BF5AF2' : '#AF52DE',
+    teal: d ? '#64D2FF' : '#5AC8FA',
+    text: d ? 'rgba(235,235,245,.65)' : 'rgba(60,60,67,.55)',
+    grid: d ? 'rgba(84,84,88,.3)'   : 'rgba(60,60,67,.1)',
+  };
+}
+
+/* ══ SCALE HELPERS ══ */
+function scX(lbl) {
+  const c = C();
+  return { beginAtZero:true, grid:{color:c.grid}, ticks:{color:c.text}, title:{display:!!lbl,text:lbl,color:c.text} };
+}
+function scY() { const c=C(); return { grid:{display:false}, ticks:{color:c.text} }; }
+function sc(yLbl) { return { y:scX(yLbl), x:scY() }; }
+function leg() { const c=C(); return { position:'top', labels:{color:c.text,font:{size:11},boxWidth:9,padding:14} }; }
+const base = { responsive:true, maintainAspectRatio:false };
+
+/* ══ BUILD ALL ══ */
+function buildAll() {
+  const c = C();
+
+  /* ── OVERVIEW ── */
+  mk('c_radar', { type:'radar', data:{
+    labels:['Throughput','Check-in Efficiency','Security Efficiency','Boarding Buffer','Boarding Safety','Peak Response'],
+    datasets:[
+      {label:'Current Plan', data:[68,55,52,50,40,37], borderColor:c.base, backgroundColor:c.base+'20', borderWidth:2.5, pointRadius:4},
+      {label:'AI Optimized ★', data:[72,58,70,90,86,82], borderColor:c.ai,   backgroundColor:c.ai+'20',   borderWidth:3.5, pointRadius:5}
+    ]
+  }, options:{...base, plugins:{legend:leg()},
+    scales:{r:{min:0,max:100,ticks:{color:c.text,backdropColor:'transparent',font:{size:9}},grid:{color:c.grid},pointLabels:{color:c.text,font:{size:11}}}}}
+  });
+
+  mk('c_improv', { type:'bar', data:{
+    labels:['At-Risk Boarding Passengers','Counter Operation Reduction','Security Screening Wait','Total Wait Time','Dwell Average','Negative Dwell'],
+    datasets:[{label:'AI Improvement (%)', data:[59,22,10,3.1,13.5,74],
+      backgroundColor:[c.red,c.base,c.ai,c.ai,c.green,c.red].map(x=>x+'cc'), borderRadius:6}]
+  }, options:{...base, indexAxis:'y',
+    plugins:{legend:{display:false}, tooltip:{callbacks:{label:ct=>`${ct.parsed.x.toFixed(1)}% improvement`}}},
+    scales:{x:{beginAtZero:true,grid:{color:c.grid},ticks:{color:c.text,callback:v=>v+'%'}}, y:{grid:{display:false},ticks:{color:c.text,font:{size:11}}}}}
+  });
+
+  mk('c_risk_ov', { type:'bar', data:{
+    labels:['Current Plan','AI Optimized Plan'],
+    datasets:[
+      {label:'At-risk passengers (Dwell<15 min)', data:[732,297], backgroundColor:[c.red+'cc',c.ai+'cc'], borderRadius:8},
+      {label:'Negative Dwell',           data:[551,143], backgroundColor:[c.red+'44',c.ai+'44'], borderRadius:8}
+    ]
+  }, options:{...base, plugins:{legend:leg()}, scales:sc('Passengers')}});
+
+  mk('c_profile', { type:'doughnut', data:{
+    labels:['General (Normal)','OFW','Priority','Crew'],
+    datasets:[{data:[27802,9810,4452,2204],
+      backgroundColor:[c.ai,c.base,c.pur,c.green], borderWidth:2,
+      borderColor: theme==='dark'?'#1C1C1E':'#FFFFFF'}]
+  }, options:{...base, plugins:{legend:{position:'right',labels:{color:c.text,font:{size:10}}}}}});
+
+  mk('c_carrier', { type:'bar', data:{
+    labels:['Carrier-A','Carrier-B','Carrier-C','Carrier-D','Carrier-E','Carrier-Other'],
+    datasets:[{data:[29563,2232,1530,1208,1166,8539],
+      backgroundColor:[c.ai,c.base,c.green,c.pur,c.teal,c.grid+'cc'], borderRadius:5}]
+  }, options:{...base, indexAxis:'y', plugins:{legend:{display:false}},
+    scales:{x:{beginAtZero:true,grid:{color:c.grid},ticks:{color:c.text}}, y:{grid:{display:false},ticks:{color:c.text,font:{size:10}}}}}});
+
+  /* ── FLOW ── */
+  mk('c_pax', { type:'bar', data:{
+    labels:HOURS,
+    datasets:[{label:'Inbound Passengers', data:PAX, backgroundColor:c.ai+'55', borderColor:c.ai, borderWidth:1.5, borderRadius:3}]
+  }, options:{...base, plugins:{legend:{display:false}}, scales:sc('Passengers')}});
+
+  mk('c_sec_h', { type:'line', data:{
+    labels:HOURS,
+    datasets:[
+      {label:'Current Plan', data:SEC.base, borderColor:c.base, backgroundColor:c.base+'15', borderWidth:2.5, pointRadius:3, tension:0.35, fill:false},
+      {label:'AI Optimized ★', data:SEC.ai,   borderColor:c.ai,   backgroundColor:c.ai+'22',   borderWidth:3.5, pointRadius:4, tension:0.35, fill:true}
+    ]
+  }, options:{...base, plugins:{legend:leg(), tooltip:{mode:'index',intersect:false}}, scales:sc('Average Wait (min)')}});
+
+  mk('c_ci_h', { type:'line', data:{
+    labels:HOURS,
+    datasets:[
+      {label:'Current Plan', data:CI.base, borderColor:c.base, borderWidth:2.5, pointRadius:3, tension:0.35, borderDash:[5,3], fill:false},
+      {label:'AI Optimized ★', data:CI.ai,   borderColor:c.ai,   borderWidth:3.5, pointRadius:4, tension:0.35, fill:false}
+    ]
+  }, options:{...base, plugins:{legend:leg(), tooltip:{mode:'index',intersect:false}}, scales:sc('Average Wait (min)')}});
+
+  /* ── BOTTLENECK ── */
+  mk('c_step', { type:'bar', data:{
+    labels:['Travel Tax','Check-in','Immigration','Security','Total'],
+    datasets:[
+      {label:'Current Plan', data:[0,22.4,0.1,9.3,31.8], backgroundColor:c.base+'cc', borderRadius:6},
+      {label:'AI Optimized ★', data:[0,22.3,0.1,8.4,30.8], backgroundColor:c.ai+'cc',   borderRadius:6}
+    ]
+  }, options:{...base, plugins:{legend:leg()}, scales:sc('Average Wait (min)')}});
+
+  mk('c_ci_donut', { type:'doughnut', data:{
+    labels:['Zone A (56%)','Zone B (15%)','Zone C (10%)','Zone D (10%)','Zone E (7%)'],
+    datasets:[{data:[25385,6628,4657,4272,3307],
+      backgroundColor:[c.red,c.ai,c.pur,c.base,c.green], borderWidth:2,
+      borderColor: theme==='dark'?'#1C1C1E':'#FFFFFF'}]
+  }, options:{...base, plugins:{legend:{position:'right',labels:{color:c.text,font:{size:10}}}}}});
+
+  mk('c_zone_cmp', { type:'bar', data:{
+    labels:['Zone A','Zone B','Zone C','Zone D','Zone E'],
+    datasets:[
+      {label:'Current', data:[840,608.5,529.5,576,563.5], backgroundColor:c.base+'cc', borderRadius:5},
+      {label:'AI ★', data:[840,616,400,327,249],       backgroundColor:c.ai+'cc',   borderRadius:5}
+    ]
+  }, options:{...base, plugins:{legend:leg()}, scales:sc('Counter-Hours')}});
+
+  mk('c_sec_zone', { type:'bar', data:{
+    labels:['LANE_MAIN_N','LANE_DOM_N','LANE_ANNEX_O','LANE_PRM','LANE_CREW','LANE_PRM_CREW','LANE_MAIN_P','LANE_ANNEX_C'],
+    datasets:[
+      {label:'Current', data:[112,112,84,28,28,0,28,56], backgroundColor:c.base+'cc', borderRadius:4},
+      {label:'AI ★', data:[112,140,84,0,0,28,28,56],  backgroundColor:c.ai+'cc',   borderRadius:4}
+    ]
+  }, options:{...base, plugins:{legend:leg()}, scales:sc('Counter-Hours')}});
+
+  /* ── RESOURCE ── */
+  mk('c_ch_zone', { type:'bar', data:{
+    labels:['Zone A','Zone B','Zone C','Zone D','Zone E'],
+    datasets:[
+      {label:'Current', data:[840,608.5,529.5,576,563.5], backgroundColor:c.base+'cc', borderRadius:5},
+      {label:'AI ★', data:[840,616,400,327,249],       backgroundColor:c.ai+'cc',   borderRadius:5}
+    ]
+  }, options:{...base, plugins:{legend:leg()}, scales:sc('Counter-Hours')}});
+
+  mk('c_ch_pct', { type:'bar', data:{
+    labels:['Zone A','Zone B','Zone C','Zone D','Zone E'],
+    datasets:[{label:'AI Reduction Rate (%)', data:[0,0,24.5,43.2,55.8],
+      backgroundColor:[c.base+'44', c.base+'44', c.ai+'99', c.ai+'bb', c.ai+'ee'],
+      borderRadius:6}]
+  }, options:{...base, plugins:{legend:{display:false}, tooltip:{callbacks:{label:ct=>`${ct.parsed.y}% reduction`}}},
+    scales:{y:{beginAtZero:true,grid:{color:c.grid},ticks:{color:c.text,callback:v=>v+'%'}}, x:{grid:{display:false},ticks:{color:c.text}}}}});
+
+  /* ── HEATMAP ── */
+  buildHeatmap();
+
+  /* ── TIMELINE ── */
+  buildTimeline();
+}
+
+/* ══ HEATMAP ══ */
+function heatColor(v) {
+  if (v <= 5)  return ['#34C759','#000'];
+  if (v <= 10) return ['#FFCC00','#000'];
+  if (v <= 20) return ['#FF9500','#fff'];
+  return ['#FF3B30','#fff'];
+}
+function buildHeatmap() {
+  const box = document.getElementById('heatmapBox');
+  if (!box) return;
+  const rows = [{label:'Current Plan', data:SEC.base},{label:'AI Optimized ★', data:SEC.ai}];
+  let h = '<table class="hm"><thead><tr><th style="text-align:left;min-width:80px">Scenario</th>';
+  HOURS.forEach(hr => { h += `<th>${hr.slice(0,2)}</th>`; });
+  h += '</tr></thead><tbody>';
+  rows.forEach(row => {
+    h += `<tr><td class="rl">${row.label}</td>`;
+    row.data.forEach(v => {
+      const [bg,fg] = heatColor(v);
+      h += `<td style="background:${bg};color:${fg}">${v.toFixed(1)}</td>`;
+    });
+    h += '</tr>';
+  });
+  h += '</tbody></table>';
+  box.innerHTML = h;
+}
+
+/* ══ TIMELINE ══ */
+function buildTimeline() {
+  const box = document.getElementById('tlBox');
+  if (!box) return;
+  const baseP = Array(24).fill(1);
+  const aiPs = [
+    [0,0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,0,0],
+    [0,1,1,1,1,0,1,1,1,1,1,1,0,1,1,1,0,1,1,1,0,0,0,0],
+    [1,1,0,1,1,1,0,1,1,0,1,1,1,1,0,1,1,1,0,1,1,0,0,0],
+    [0,0,0,1,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,1,0,0],
+    [0,0,1,1,1,0,0,1,1,1,0,1,1,0,1,1,1,1,0,1,0,0,0,0],
+  ];
+
+  let h = '<div class="tl-hdr"><div></div>';
+  HOURS.forEach(hr => { h += `<div class="tl-h">${hr.slice(0,2)}</div>`; });
+  h += '</div>';
+
+  h += `<div style="font-size:11px;font-weight:700;color:var(--orange);padding:5px 0 2px">Current Plan — Zone E (example: 3 counters, always open)</div>`;
+  for (let i = 0; i < 3; i++) {
+    h += '<div class="tl-row">';
+    h += `<div class="tl-lbl">Counter ${i+1}</div>`;
+    baseP.forEach(() => { h += '<div class="tl-cell tl-on-b"></div>'; });
+    h += '</div>';
+  }
+
+  h += `<div style="font-size:11px;font-weight:700;color:var(--blue);padding:8px 0 2px">AI Optimized Plan — Zone E (example: 5 counters, dynamic operation)</div>`;
+  aiPs.forEach((pat, idx) => {
+    h += '<div class="tl-row">';
+    h += `<div class="tl-lbl">Counter ${idx+1}</div>`;
+    pat.forEach(v => { h += `<div class="tl-cell ${v ? 'tl-on-a' : 'tl-off'}"></div>`; });
+    h += '</div>';
+  });
+
+  box.innerHTML = h;
+}
+
+/* ══ INIT ══ */
+document.addEventListener('DOMContentLoaded', function() {
+
+  /* Theme init */
+  const btnTheme = document.getElementById('btnTheme');
+  theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', theme);
+  btnTheme.textContent = theme === 'dark' ? '🌙' : '☀️';
+
+  btnTheme.addEventListener('click', function() {
+    theme = theme === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', theme);
+    btnTheme.textContent = theme === 'dark' ? '🌙' : '☀️';
+    buildAll();
+  });
+
+  /* Tab switching */
+  document.querySelectorAll('.nav-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.nav-btn').forEach(function(b){ b.classList.remove('active'); });
+      document.querySelectorAll('.tab-pane').forEach(function(p){ p.classList.remove('active'); });
+      btn.classList.add('active');
+      var pane = document.getElementById('tab-' + btn.getAttribute('data-tab'));
+      if (pane) pane.classList.add('active');
+    });
+  });
+
+  /* Build charts */
+  buildAll();
+});
+</script>
+</body>
+</html>
