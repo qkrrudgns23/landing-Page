@@ -11,28 +11,31 @@
   <meta property="og:type" content="website">
   <meta property="og:title" content="Flexa | Optimal Strategy for Airports Worldwide">
   <meta property="og:description" content="Explore Flexa's airport planning solutions including Terminal Optimizer, Airside Designer, and Master Planner.">
-  <meta property="og:image" content="web/share-preview.png">
+  <meta property="og:image" content="web/share-preview.webp">
   <meta property="og:image:alt" content="TeamFlexa logo">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Flexa | Optimal Strategy for Airports Worldwide">
   <meta name="twitter:description" content="Explore Flexa's airport planning solutions including Terminal Optimizer, Airside Designer, and Master Planner.">
-  <meta name="twitter:image" content="web/share-preview.png">
+  <meta name="twitter:image" content="web/share-preview.webp">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/pretendard.css">
   <style>
     :root {
       --bg: #0a0a0b;
-      --page: #fafafb;
+      --page: #f5f5f7;
       --card: #ffffff;
       --muted: #8c8c94;
       --text: #252528;
       --blue: #0071e3;
       --blue-dark: #005ecb;
       --line: rgba(17, 17, 19, 0.04);
-      --shadow: 0 10px 24px rgba(17, 17, 19, 0.05);
+      --shadow: 2px 4px 12px rgba(0, 0, 0, 0.08);
+      --shadow-hover: 2px 4px 16px rgba(0, 0, 0, 0.16);
       --radius-xl: 34px;
       --radius-lg: 28px;
       --radius-md: 22px;
       --wrap: min(1520px, calc(100vw - 60px));
+      --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+      --ease-snappy: cubic-bezier(0.2, 0, 0, 1);
     }
 
     * {
@@ -41,12 +44,16 @@
 
     html {
       scroll-behavior: smooth;
+      height: 100%;
+      overflow: hidden;
     }
 
     body {
+      height: 100%;
       margin: 0;
+      overflow: hidden;
       color: var(--text);
-      background: radial-gradient(circle at 8% 14%, #fcfcfd 0%, #fafafb 38%, #f7f8fa 70%, #f1f3f7 100%);
+      background: var(--page);
       font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
@@ -89,14 +96,27 @@
 
     .site-shell {
       min-height: 100vh;
-      transition: filter 0.45s ease, transform 0.45s ease, opacity 0.3s ease;
+      height: 100vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      transition: filter 0.55s var(--ease-smooth), transform 0.55s var(--ease-smooth), opacity 0.38s var(--ease-snappy);
       transform-origin: center top;
     }
 
+    .site-shell::-webkit-scrollbar {
+      display: none;
+    }
+
     body.modal-open .site-shell {
-      filter: blur(22px) saturate(1.03);
-      transform: scale(1.012);
-      opacity: 0.82;
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      top: calc(var(--shell-scroll-y, 0px) * -1);
+      filter: blur(14px) saturate(1.04);
+      transform: scale(1.006);
+      opacity: 0.78;
       pointer-events: none;
       user-select: none;
     }
@@ -112,6 +132,10 @@
       gap: 2px;
       padding: 10px 0 32px;
       text-align: left;
+    }
+
+    .hero-inner > * {
+      will-change: transform, opacity;
     }
 
     .hero-wordmark {
@@ -257,22 +281,41 @@
     }
 
     .product-card {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
       display: grid;
       gap: 14px;
-      padding: 28px 28px 24px;
+      padding: 28px 28px 28px;
       border-radius: var(--radius-xl);
-      background: var(--card);
+      background: #ffffff;
       box-shadow: var(--shadow);
-      border: 1px solid rgba(17, 17, 19, 0.018);
+      border: 0;
       min-height: 100%;
       min-height: 548px;
       cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transition: transform 0.34s var(--ease-smooth), box-shadow 0.34s var(--ease-smooth), border-color 0.3s var(--ease-snappy), background 0.3s var(--ease-snappy);
+      will-change: transform, box-shadow;
+      transform-origin: center center;
+    }
+
+    .product-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(250, 250, 252, 0.98) 100%);
+      opacity: 0;
+      transition: opacity 0.42s var(--ease-snappy);
     }
 
     .product-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 16px 30px rgba(0, 0, 0, 0.06);
+      transform: translateY(-2px) scale(1.006);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .product-card:hover::before {
+      opacity: 1;
     }
 
     .product-card:focus-visible {
@@ -342,6 +385,7 @@
     }
 
     .card-device {
+      position: relative;
       display: grid;
       align-items: center;
       margin-top: 26px;
@@ -500,6 +544,22 @@
       background: #d7d2a5;
     }
 
+    .dot.pink {
+      background: #f4c7da;
+    }
+
+    .dot.lavender {
+      background: #d7ccf8;
+    }
+
+    .dot.gray {
+      background: #90939b;
+    }
+
+    .dot.light-gray {
+      background: #dedfe4;
+    }
+
     .product-bottom {
       display: flex;
       align-items: center;
@@ -507,6 +567,44 @@
       gap: 16px;
       margin-top: auto;
       padding-top: 14px;
+    }
+
+    .product-hover-link {
+      position: absolute;
+      left: 50%;
+      top: 56%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      padding: 0 28px;
+      border-radius: 999px;
+      background: rgba(0, 113, 227, 0.94);
+      color: #ffffff;
+      font-size: 0.96rem;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+      backdrop-filter: saturate(180%) blur(18px);
+      opacity: 0;
+      filter: blur(8px);
+      transform: translate(-50%, calc(-50% + 18px)) scale(0.965);
+      transition: opacity 0.38s var(--ease-snappy), transform 0.68s var(--ease-smooth), filter 0.68s var(--ease-smooth);
+      pointer-events: none;
+      white-space: nowrap;
+      z-index: 2;
+    }
+
+    .product-hover-link::after {
+      content: none;
+    }
+
+    .product-card:hover .product-hover-link,
+    .product-card:focus-visible .product-hover-link,
+    .product-card:focus-within .product-hover-link {
+      opacity: 1;
+      filter: blur(0);
+      transform: translate(-50%, -50%) scale(1);
     }
 
     .product-bottom > .button {
@@ -536,6 +634,8 @@
     }
 
     .button {
+      position: relative;
+      overflow: hidden;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -544,12 +644,19 @@
       border-radius: 999px;
       font-size: 0.72rem;
       font-weight: 700;
-      transition: background-color 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28);
+      transition: background-color 0.28s var(--ease-snappy), color 0.28s var(--ease-snappy), transform 0.28s var(--ease-smooth), border-color 0.28s var(--ease-snappy), box-shadow 0.28s var(--ease-snappy);
       white-space: nowrap;
     }
 
     .button:hover {
       transform: translateY(-1px);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.34), 0 10px 18px rgba(15, 23, 42, 0.08);
+    }
+
+    .button:active {
+      transform: translateY(0);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
     }
 
     .button-primary {
@@ -623,7 +730,7 @@
       padding: 24px;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.35s ease;
+      transition: opacity 0.38s var(--ease-snappy);
     }
 
     .modal-shell.is-open {
@@ -636,13 +743,16 @@
       inset: 0;
       background: rgba(99, 99, 104, 0.18);
       backdrop-filter: blur(20px) saturate(1.08);
+      opacity: 0;
+      transition: opacity 0.38s var(--ease-snappy);
     }
 
     .modal-card {
       position: relative;
       width: min(1030px, calc(100vw - 34px));
       max-height: calc(100vh - 34px);
-      overflow: auto;
+      overflow-y: auto;
+      overflow-x: hidden;
       border-radius: 28px;
       background: rgba(251, 251, 253, 0.92);
       border: 1px solid rgba(255, 255, 255, 0.8);
@@ -650,10 +760,22 @@
       backdrop-filter: blur(28px);
       -ms-overflow-style: none;
       scrollbar-width: none;
+      opacity: 0;
+      transform: translateY(22px) scale(0.985);
+      transition: opacity 0.44s var(--ease-snappy), transform 0.44s var(--ease-smooth);
     }
 
     .modal-card::-webkit-scrollbar {
       display: none;
+    }
+
+    .modal-shell.is-open .modal-backdrop {
+      opacity: 1;
+    }
+
+    .modal-shell.is-open .modal-card {
+      opacity: 1;
+      transform: translateY(0) scale(1);
     }
 
     .modal-close {
@@ -721,7 +843,15 @@
       gap: 22px;
       padding: 32px;
       border-radius: 30px;
-      background: #f5f5f7;
+      background: #ffffff;
+      border: 0;
+      transition: transform 0.38s var(--ease-smooth), box-shadow 0.38s var(--ease-smooth), border-color 0.38s var(--ease-snappy);
+      box-shadow: var(--shadow);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
     }
 
     .feature-card.two-col {
@@ -769,6 +899,7 @@
       padding: 22px;
       border-radius: 28px;
       background: #fff;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
     }
 
     .feature-media {
@@ -812,9 +943,21 @@
       align-items: center;
     }
 
-    .feature-note-row img {
-      width: min(340px, 100%);
-      border-radius: 14px;
+    .feature-status-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 32px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(236, 72, 153, 0.22);
+      background: linear-gradient(180deg, rgba(253, 242, 248, 0.96) 0%, rgba(252, 231, 243, 0.92) 100%);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82), 0 10px 24px rgba(236, 72, 153, 0.08);
+      color: #be185d;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
     .feature-note-panel {
@@ -842,6 +985,23 @@
       font-size: 0.84rem;
     }
 
+    .reveal-up {
+      opacity: 0;
+      transform: translateY(24px) scale(0.985);
+      transition: opacity 0.72s var(--ease-snappy), transform 0.72s var(--ease-smooth);
+      transition-delay: calc(var(--reveal-order, 0) * 70ms);
+      will-change: transform, opacity;
+    }
+
+    .reveal-up.is-visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .product-card.reveal-up.is-visible:hover {
+      transform: translateY(-2px) scale(1.006);
+    }
+
     @media (max-width: 1100px) {
       .product-grid {
         grid-template-columns: 1fr;
@@ -865,6 +1025,13 @@
         padding: 20px 18px 18px;
       }
 
+      .product-hover-link {
+        top: 54%;
+        min-height: 46px;
+        padding: 0 22px;
+        font-size: 0.88rem;
+      }
+
       .modal-shell {
         padding: 12px;
       }
@@ -884,6 +1051,26 @@
 
       .contacts-inner {
         align-items: flex-start;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .site-shell,
+      .product-card,
+      .product-card::before,
+      .card-device,
+      .button,
+      .modal-shell,
+      .modal-backdrop,
+      .modal-card,
+      .feature-card,
+      .reveal-up {
+        transition: none;
+      }
+
+      .reveal-up {
+        opacity: 1;
+        transform: none;
       }
     }
   </style>
@@ -924,7 +1111,6 @@
           <article class="product-card" role="button" tabindex="0" aria-label="Select Simmula Terminal Optimizer" data-card-modal="simmula">
             <div class="product-top">
               <h2 class="product-title stacked"><span class="product-title-brand simmula">Simmula</span><span class="product-title-name">Terminal Optimizer</span></h2>
-              <div class="product-copy">Minimize queues, maximize revenue</div>
             </div>
 
             <div class="card-device">
@@ -935,9 +1121,9 @@
                     muted
                     loop
                     playsinline
-                    preload="metadata"
+                    preload="none"
                     data-autoplay-video
-                    poster="web/simmula/passenger-queues-facility-flow-poster.png"
+                    poster="web/simmula/passenger-queues-facility-flow-poster.webp"
                     aria-label="Simmula Terminal Optimizer preview"
                   >
                     <source src="web/simmula/passenger-queues-facility-flow.mp4" type="video/mp4">
@@ -946,10 +1132,10 @@
                 <img class="device-frame" src="web/simmula/macbook-frame.webp" alt="Laptop frame">
               </div>
               <div class="swatches" aria-hidden="true">
-                <span class="dot dark"></span>
-                <span class="dot blue"></span>
-                <span class="dot"></span>
-                <span class="dot"></span>
+                <span class="dot pink"></span>
+                <span class="dot lavender"></span>
+                <span class="dot gray"></span>
+                <span class="dot light-gray"></span>
               </div>
             </div>
 
@@ -960,12 +1146,12 @@
                 <a class="button button-solution" href="web/simmula/Simmula_Sample.html" download="Simmula_Sample.html">Sample &#8599;</a>
               </div>
             </div>
+            <span class="product-hover-link" aria-hidden="true">Learn more</span>
           </article>
 
           <article class="product-card" role="button" tabindex="0" aria-label="Select BluPrint Airside Designer" data-card-modal="airside">
             <div class="product-top">
               <h2 class="product-title stacked"><span class="product-title-brand">BluPrint</span><span class="product-title-name">Airside Designer</span></h2>
-              <div class="product-copy">Optimal Airside Strategy</div>
             </div>
 
             <div class="card-device">
@@ -976,7 +1162,7 @@
                     muted
                     loop
                     playsinline
-                    preload="metadata"
+                    preload="none"
                     data-autoplay-video
                     poster="web/airside_sim/airside-designer-preview-poster.webp"
                     aria-label="BluPrint Airside Designer preview"
@@ -987,28 +1173,28 @@
                 <img class="device-frame" src="web/airside_sim/macbook-frame.webp" alt="Laptop frame">
               </div>
               <div class="swatches" aria-hidden="true">
-                <span class="dot"></span>
-                <span class="dot"></span>
-                <span class="dot gold"></span>
                 <span class="dot dark"></span>
+                <span class="dot blue"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
               </div>
             </div>
 
             <div class="product-bottom">
               <a class="button button-primary" href="https://forms.office.com/pages/responsepage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAAO__c8PC4lUOVpPQ0pZWVBaWUxOME9VVlAyUVIzNTYxSS4u&amp;route=shorturl">Contact Us</a>
             </div>
+            <span class="product-hover-link" aria-hidden="true">Learn more</span>
           </article>
 
           <article class="product-card" role="button" tabindex="0" aria-label="Select BluPrint Master Planner" data-coming-soon="Master Planner" data-coming-soon-copy="">
             <div class="product-top">
               <h2 class="product-title stacked"><span class="product-title-brand">BluPrint</span><span class="product-title-name">Master Planner</span></h2>
-              <div class="product-copy">From demand to capacity, in one step</div>
             </div>
 
             <div class="card-device">
               <div class="device-stage masterplanner-stage">
                 <div class="device-screen">
-                  <img src="web/masterplanner/master-planner-preview-poster.png" alt="BluPrint Master Planner preview">
+                  <img src="web/masterplanner/master-planner-preview-poster.webp" alt="BluPrint Master Planner preview">
                 </div>
                 <img class="device-frame" src="web/airside_sim/macbook-frame.webp" alt="Laptop frame">
               </div>
@@ -1021,6 +1207,7 @@
             <div class="product-bottom">
               <a class="button button-primary" href="https://forms.office.com/pages/responsepage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAAO__c8PC4lUOVpPQ0pZWVBaWUxOME9VVlAyUVIzNTYxSS4u&amp;route=shorturl">Contact Us</a>
             </div>
+            <span class="product-hover-link" aria-hidden="true">Learn more</span>
           </article>
         </section>
       </div>
@@ -1061,8 +1248,8 @@
               <div class="feature-media">
                 <div class="device-stage">
                   <div class="device-screen">
-                    <video autoplay muted loop playsinline preload="metadata" data-autoplay-video poster="web/simmula/passenger-queues-facility-flow-poster.png" aria-label="Passenger queues, facility utilization, and flow video">
-                      <source src="web/simmula/passenger-queues-facility-flow.mp4" type="video/mp4">
+                    <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/simmula/passenger-queues-facility-flow-poster.webp" aria-label="Passenger queues, facility utilization, and flow video">
+                      <source data-src="web/simmula/passenger-queues-facility-flow.mp4" type="video/mp4">
                     </video>
                   </div>
                   <img class="device-frame" src="web/simmula/macbook-frame.webp" alt="Laptop frame">
@@ -1079,8 +1266,8 @@
               <div class="feature-media">
                 <div class="device-stage">
                   <div class="device-screen">
-                    <video autoplay muted loop playsinline preload="metadata" data-autoplay-video poster="web/simmula/multi-airport-demand-scenarios-poster.png" aria-label="Multi-airport demand scenarios video">
-                      <source src="web/simmula/multi-airport-demand-scenarios.mp4" type="video/mp4">
+                    <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/simmula/multi-airport-demand-scenarios-poster.webp" aria-label="Multi-airport demand scenarios video">
+                      <source data-src="web/simmula/multi-airport-demand-scenarios.mp4" type="video/mp4">
                     </video>
                   </div>
                   <img class="device-frame" src="web/simmula/macbook-frame.webp" alt="Laptop frame">
@@ -1097,8 +1284,8 @@
               <div class="feature-media">
                 <div class="device-stage">
                   <div class="device-screen">
-                    <video class="video-fit-contain" autoplay muted loop playsinline preload="metadata" data-autoplay-video poster="web/simmula/queue-root-cause-resource-status-poster.png" aria-label="Queue root cause and resource status video">
-                      <source src="web/simmula/queue-root-cause-resource-status.mp4" type="video/mp4">
+                    <video class="video-fit-contain" autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/simmula/queue-root-cause-resource-status-poster.webp" aria-label="Queue root cause and resource status video">
+                      <source data-src="web/simmula/queue-root-cause-resource-status.mp4" type="video/mp4">
                     </video>
                   </div>
                   <img class="device-frame" src="web/simmula/macbook-frame.webp" alt="Laptop frame">
@@ -1115,8 +1302,8 @@
               <div class="feature-media">
                 <div class="device-stage">
                   <div class="device-screen">
-                    <video class="video-fit-contain" autoplay muted loop playsinline preload="metadata" data-autoplay-video poster="web/simmula/passenger-experience-flow-analysis-poster.png" aria-label="Passenger experience flow analysis video">
-                      <source src="web/simmula/passenger-experience-flow-analysis.mp4" type="video/mp4">
+                    <video class="video-fit-contain" autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/simmula/passenger-experience-flow-analysis-poster.webp" aria-label="Passenger experience flow analysis video">
+                      <source data-src="web/simmula/passenger-experience-flow-analysis.mp4" type="video/mp4">
                     </video>
                   </div>
                   <img class="device-frame" src="web/simmula/macbook-frame.webp" alt="Laptop frame">
@@ -1133,8 +1320,8 @@
               <div class="feature-media">
                 <div class="device-stage">
                   <div class="device-screen">
-                    <video class="video-fit-contain" autoplay muted loop playsinline preload="metadata" data-autoplay-video poster="web/simmula/monetize-waiting-time-analysis-poster.png" aria-label="Monetize waiting time analysis video">
-                      <source src="web/simmula/monetize-waiting-time-analysis.mp4" type="video/mp4">
+                    <video class="video-fit-contain" autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/simmula/monetize-waiting-time-analysis-poster.webp" aria-label="Monetize waiting time analysis video">
+                      <source data-src="web/simmula/monetize-waiting-time-analysis.mp4" type="video/mp4">
                     </video>
                   </div>
                   <img class="device-frame" src="web/simmula/macbook-frame.webp" alt="Laptop frame">
@@ -1151,8 +1338,8 @@
               <div class="feature-media">
                 <div class="device-stage">
                   <div class="device-screen">
-                    <video class="video-fit-contain" autoplay muted loop playsinline preload="metadata" data-autoplay-video poster="web/simmula/passenger-attribute-assignment-poster.png" aria-label="Passenger attribute assignment video">
-                      <source src="web/simmula/passenger-attribute-assignment.mp4" type="video/mp4">
+                    <video class="video-fit-contain" autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/simmula/passenger-attribute-assignment-poster.webp" aria-label="Passenger attribute assignment video">
+                      <source data-src="web/simmula/passenger-attribute-assignment.mp4" type="video/mp4">
                     </video>
                   </div>
                   <img class="device-frame" src="web/simmula/macbook-frame.webp" alt="Laptop frame">
@@ -1169,8 +1356,8 @@
               <div class="feature-media">
                 <div class="device-stage">
                   <div class="device-screen">
-                    <video class="video-fit-contain" autoplay muted loop playsinline preload="metadata" data-autoplay-video poster="web/simmula/facility-airline-transaction-configuration-poster.png" aria-label="Facility airline and transaction configuration video">
-                      <source src="web/simmula/facility-airline-transaction-configuration.mp4" type="video/mp4">
+                    <video class="video-fit-contain" autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/simmula/facility-airline-transaction-configuration-poster.webp" aria-label="Facility airline and transaction configuration video">
+                      <source data-src="web/simmula/facility-airline-transaction-configuration.mp4" type="video/mp4">
                     </video>
                   </div>
                   <img class="device-frame" src="web/simmula/macbook-frame.webp" alt="Laptop frame">
@@ -1187,8 +1374,8 @@
               <div class="feature-media">
                 <div class="device-stage">
                   <div class="device-screen">
-                    <video class="video-fit-contain" autoplay muted loop playsinline preload="metadata" data-autoplay-video poster="web/simmula/process-sequence-workflow-modification-poster.png" aria-label="Process sequence and workflow modification video">
-                      <source src="web/simmula/process-sequence-workflow-modification.mp4" type="video/mp4">
+                    <video class="video-fit-contain" autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/simmula/process-sequence-workflow-modification-poster.webp" aria-label="Process sequence and workflow modification video">
+                      <source data-src="web/simmula/process-sequence-workflow-modification.mp4" type="video/mp4">
                     </video>
                   </div>
                   <img class="device-frame" src="web/simmula/macbook-frame.webp" alt="Laptop frame">
@@ -1236,8 +1423,8 @@
               <div class="feature-media">
                 <div class="device-stage">
                   <div class="device-screen">
-                    <video autoplay muted loop playsinline preload="metadata" data-autoplay-video poster="web/airside_sim/airside-designer-preview-poster.webp" aria-label="Slide 3 video">
-                      <source src="web/airside_sim/airside-designer-preview.mp4" type="video/mp4">
+                    <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/airside_sim/airside-designer-preview-poster.webp" aria-label="Slide 3 video">
+                      <source data-src="web/airside_sim/airside-designer-preview.mp4" type="video/mp4">
                     </video>
                   </div>
                   <img class="device-frame" src="web/airside_sim/macbook-frame.webp" alt="Laptop frame">
@@ -1254,8 +1441,8 @@
               <div class="feature-media">
                 <div class="device-stage">
                   <div class="device-screen">
-                    <video autoplay muted loop playsinline preload="metadata" data-autoplay-video poster="web/airside_sim/runway-occupancy-simulation-poster.webp" aria-label="Slide 4 video">
-                      <source src="web/airside_sim/runway-occupancy-simulation.mp4" type="video/mp4">
+                    <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/airside_sim/runway-occupancy-simulation-poster.webp" aria-label="Slide 4 video">
+                      <source data-src="web/airside_sim/runway-occupancy-simulation.mp4" type="video/mp4">
                     </video>
                   </div>
                   <img class="device-frame" src="web/airside_sim/macbook-frame.webp" alt="Laptop frame">
@@ -1272,8 +1459,8 @@
               <div class="feature-media">
                 <div class="device-stage">
                   <div class="device-screen">
-                    <video autoplay muted loop playsinline preload="metadata" data-autoplay-video poster="web/airside_sim/infrastructure-scenario-testing-poster.webp" aria-label="Slide 5 video">
-                      <source src="web/airside_sim/infrastructure-scenario-testing.mp4" type="video/mp4">
+                    <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/airside_sim/infrastructure-scenario-testing-poster.webp" aria-label="Slide 5 video">
+                      <source data-src="web/airside_sim/infrastructure-scenario-testing.mp4" type="video/mp4">
                     </video>
                   </div>
                   <img class="device-frame" src="web/airside_sim/macbook-frame.webp" alt="Laptop frame">
@@ -1290,8 +1477,8 @@
               <div class="feature-media">
                 <div class="device-stage">
                   <div class="device-screen">
-                    <video autoplay muted loop playsinline preload="metadata" data-autoplay-video poster="web/airside_sim/collision-clearance-check-poster.webp" aria-label="Slide 6 video">
-                      <source src="web/airside_sim/collision-clearance-check.mp4" type="video/mp4">
+                    <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/airside_sim/collision-clearance-check-poster.webp" aria-label="Slide 6 video">
+                      <source data-src="web/airside_sim/collision-clearance-check.mp4" type="video/mp4">
                     </video>
                   </div>
                   <img class="device-frame" src="web/airside_sim/macbook-frame.webp" alt="Laptop frame">
@@ -1308,8 +1495,8 @@
               <div class="feature-media">
                 <div class="device-stage">
                   <div class="device-screen">
-                    <video autoplay muted loop playsinline preload="metadata" data-autoplay-video poster="web/airside_sim/complex-simulation-analysis-poster.png" aria-label="Slide 15 video">
-                      <source src="web/airside_sim/complex-simulation-analysis.mp4" type="video/mp4">
+                    <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/airside_sim/complex-simulation-analysis-poster.webp" aria-label="Slide 15 video">
+                      <source data-src="web/airside_sim/complex-simulation-analysis.mp4" type="video/mp4">
                     </video>
                   </div>
                   <img class="device-frame" src="web/airside_sim/macbook-frame.webp" alt="Laptop frame">
@@ -1326,8 +1513,8 @@
               <div class="feature-media">
                 <div class="device-stage">
                   <div class="device-screen">
-                    <video autoplay muted loop playsinline preload="metadata" data-autoplay-video poster="web/airside_sim/layout-setting-poster.webp" aria-label="Slide 7 video">
-                      <source src="web/airside_sim/layout-setting.mp4" type="video/mp4">
+                    <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/airside_sim/layout-setting-poster.webp" aria-label="Slide 7 video">
+                      <source data-src="web/airside_sim/layout-setting.mp4" type="video/mp4">
                     </video>
                   </div>
                   <img class="device-frame" src="web/airside_sim/macbook-frame.webp" alt="Laptop frame">
@@ -1344,8 +1531,8 @@
               <div class="feature-media">
                 <div class="device-stage">
                   <div class="device-screen">
-                    <video autoplay muted loop playsinline preload="metadata" data-autoplay-video poster="web/airside_sim/three-dimensional-model-poster.webp" aria-label="Slide 8 video">
-                      <source src="web/airside_sim/three-dimensional-model.mp4" type="video/mp4">
+                    <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/airside_sim/three-dimensional-model-poster.webp" aria-label="Slide 8 video">
+                      <source data-src="web/airside_sim/three-dimensional-model.mp4" type="video/mp4">
                     </video>
                   </div>
                   <img class="device-frame" src="web/airside_sim/macbook-frame.webp" alt="Laptop frame">
@@ -1362,8 +1549,8 @@
               <div class="feature-media">
                 <div class="device-stage">
                   <div class="device-screen">
-                    <video autoplay muted loop playsinline preload="metadata" data-autoplay-video poster="web/airside_sim/global-airport-layouts-poster.webp" aria-label="Slide 9 video">
-                      <source src="web/airside_sim/global-airport-layouts.mp4" type="video/mp4">
+                    <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/airside_sim/global-airport-layouts-poster.webp" aria-label="Slide 9 video">
+                      <source data-src="web/airside_sim/global-airport-layouts.mp4" type="video/mp4">
                     </video>
                   </div>
                   <img class="device-frame" src="web/airside_sim/macbook-frame.webp" alt="Laptop frame">
@@ -1440,14 +1627,14 @@
             <div class="feature-text">
               <h3><span class="feature-accent">AI-powered</span> queries for rapid operational and <span class="feature-accent">infrastructure decisions</span></h3>
               <div class="feature-note-row">
-                <img src="web/airside_sim/in-development-badge.webp" alt="In development badge">
+                <span class="feature-status-badge">In Development</span>
               </div>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
                 <div class="device-stage">
                   <div class="device-screen">
-                    <img src="web/airside_sim/ai-powered-queries-visual.webp" alt="Slide 14 visual">
+                    <img src="web/airside_sim/ai-powered-queries-visual.png" alt="AI-powered queries visual">
                   </div>
                   <img class="device-frame" src="web/airside_sim/macbook-frame.webp" alt="Laptop frame">
                 </div>
@@ -1497,12 +1684,27 @@
 
     let activeModal = null;
     let lastTrigger = null;
+    let scrollLockY = 0;
+    const siteShell = document.querySelector(".site-shell");
 
     const autoplayVideos = Array.from(document.querySelectorAll("[data-autoplay-video]"));
+    const previewVideos = autoplayVideos.filter((video) => !video.hasAttribute("data-modal-video"));
+    const revealTargets = Array.from(document.querySelectorAll(".hero-inner > *, .product-card, .contacts-inner > *"));
+
+    revealTargets.forEach((element, index) => {
+      element.classList.add("reveal-up");
+      element.style.setProperty("--reveal-order", String(index % 6));
+    });
 
     const tryPlay = (video) => {
       if (!video) {
         return;
+      }
+      const deferredSource = video.querySelector("source[data-src]");
+      if (deferredSource && !deferredSource.dataset.loaded) {
+        deferredSource.src = deferredSource.dataset.src;
+        deferredSource.dataset.loaded = "true";
+        video.load();
       }
       video.muted = true;
       video.defaultMuted = true;
@@ -1530,21 +1732,49 @@
       });
     }, { threshold: 0.35 });
 
-    autoplayVideos.forEach((video) => {
+    previewVideos.forEach((video) => {
       observer.observe(video);
-      tryPlay(video);
     });
 
-    const closeModal = () => {
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const revealObserver = new IntersectionObserver((entries, obs) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) {
+            return;
+          }
+          entry.target.classList.add("is-visible");
+          obs.unobserve(entry.target);
+        });
+      }, { threshold: 0.16, root: siteShell || null });
+
+      revealTargets.forEach((element) => {
+        revealObserver.observe(element);
+      });
+    } else {
+      revealTargets.forEach((element) => element.classList.add("is-visible"));
+    }
+
+    const closeModal = ({ restoreFocus = true } = {}) => {
       if (!activeModal) {
         return;
       }
       activeModal.classList.remove("is-open");
       activeModal.setAttribute("aria-hidden", "true");
       document.body.classList.remove("modal-open");
-      activeModal.querySelectorAll("video").forEach(pauseVideo);
-      if (lastTrigger) {
+      document.body.style.removeProperty("--shell-scroll-y");
+      if (siteShell) {
+        siteShell.scrollTo(0, scrollLockY);
+      }
+      activeModal.querySelectorAll("video").forEach((video) => {
+        pauseVideo(video);
+        if (video.hasAttribute("data-modal-video")) {
+          observer.unobserve(video);
+        }
+      });
+      if (restoreFocus && lastTrigger) {
         lastTrigger.focus();
+      } else if (lastTrigger) {
+        lastTrigger.blur();
       }
       activeModal = null;
       lastTrigger = null;
@@ -1561,10 +1791,21 @@
       }
       activeModal = modal;
       lastTrigger = trigger || null;
+      scrollLockY = siteShell ? siteShell.scrollTop : window.scrollY;
+      document.body.style.setProperty("--shell-scroll-y", `${scrollLockY}px`);
       modal.classList.add("is-open");
       modal.setAttribute("aria-hidden", "false");
       document.body.classList.add("modal-open");
-      modal.querySelectorAll("video").forEach(tryPlay);
+      const modalVideos = Array.from(modal.querySelectorAll("video[data-modal-video]"));
+      modalVideos.forEach((video) => observer.observe(video));
+      requestAnimationFrame(() => {
+        modalVideos.forEach((video) => {
+          const rect = video.getBoundingClientRect();
+          if (rect.bottom > 0 && rect.top < window.innerHeight) {
+            tryPlay(video);
+          }
+        });
+      });
       const closeButton = modal.querySelector("[data-close-modal]");
       if (closeButton) {
         closeButton.focus();
@@ -1669,7 +1910,7 @@
 
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape") {
-        closeModal();
+        closeModal({ restoreFocus: false });
       }
     });
 
