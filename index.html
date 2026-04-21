@@ -12,6 +12,8 @@
   <meta property="og:title" content="Flexa | Optimal Strategy for Airports Worldwide">
   <meta property="og:description" content="Explore Flexa's airport planning solutions including Terminal Optimizer, Airside Designer, and Master Planner.">
   <meta property="og:image" content="web/share-preview.webp">
+  <meta property="og:image:width" content="800">
+  <meta property="og:image:height" content="268">
   <meta property="og:image:alt" content="TeamFlexa logo">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Flexa | Optimal Strategy for Airports Worldwide">
@@ -420,6 +422,10 @@
       background: #080809;
     }
 
+    .product-card .device-screen {
+      border-radius: 9px 9px 5px 5px;
+    }
+
     .device-screen img,
     .device-screen video {
       width: 100%;
@@ -434,7 +440,9 @@
       background: #ffffff;
     }
 
-    .device-stage.airside-stage {
+    .device-stage.airside-stage,
+    .device-stage.simmula-stage,
+    .device-stage.masterplanner-stage {
       --screen-top: 9.9%;
       --screen-left: 11.95%;
       --screen-width: 76.1%;
@@ -456,72 +464,18 @@
       transform: translateY(-3%) scale(1.17);
     }
 
-    .device-stage.simmula-stage {
-      --screen-top: 9.9%;
-      --screen-left: 11.95%;
-      --screen-width: 76.1%;
-      --screen-height: 81.1%;
-    }
-
     .device-stage.simmula-stage .device-screen video {
       object-position: center 50%;
     }
 
-    .device-stage.masterplanner-stage {
-      --screen-top: 9.9%;
-      --screen-left: 11.95%;
-      --screen-width: 76.1%;
-      --screen-height: 81.1%;
-    }
-
-    /* Letterbox/pillarbox: video bg is often ignored by the compositor; fill via flex wrapper */
-    .device-stage.masterplanner-stage .device-screen > .mp-screen-fill {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: inherit;
-    }
-
-    .device-stage.masterplanner-stage .device-screen > .mp-screen-fill video {
-      width: auto;
-      height: auto;
-      max-width: 100%;
-      max-height: 100%;
-      flex: 0 1 auto;
-      object-fit: contain;
-      object-position: center;
-      background: transparent;
-    }
-
-    .device-stage.masterplanner-stage.masterplanner-preview-stage .device-screen > .mp-screen-fill video {
-      transform: translateY(-1%);
-    }
-
-    .device-stage.masterplanner-stage .device-screen img {
-      object-fit: contain;
-      object-position: center;
-      transform: none;
-    }
-
-    .device-stage.masterplanner-stage.mp-fill-28 .device-screen > .mp-screen-fill,
-    .device-stage.masterplanner-stage.mp-fill-31 .device-screen > .mp-screen-fill,
-    .device-stage.masterplanner-stage.mp-fill-32 .device-screen > .mp-screen-fill,
-    .device-stage.masterplanner-stage.mp-fill-33 .device-screen > .mp-screen-fill {
+    .device-stage.masterplanner-stage .device-screen {
       background: #1a1a1a;
     }
 
-    .device-stage.masterplanner-stage.mp-fill-29 .device-screen > .mp-screen-fill {
-      background: #0e121e;
-    }
-
-    .device-stage.masterplanner-stage.mp-fill-30 .device-screen > .mp-screen-fill {
-      background: #e8eaef;
-    }
-
-    .device-stage.masterplanner-stage.mp-fill-34 .device-screen > .mp-screen-fill {
-      background: #ffffff;
+    .device-stage.masterplanner-stage .device-screen video {
+      object-fit: contain;
+      object-position: center;
+      background: #1a1a1a;
     }
 
     .device-frame {
@@ -810,18 +764,6 @@
       transform: translateY(0) scale(1);
     }
 
-    /* Master Planner detail only: ~3% larger, but pre-shrink max size so scaled frames stay inside laptop screen (no side/top/bottom clip) */
-    #masterPlannerModal .device-stage.masterplanner-stage .device-screen > .mp-screen-fill video[data-modal-video] {
-      max-width: calc(100% / 1.03);
-      max-height: calc(100% / 1.03);
-      width: auto;
-      height: auto;
-      object-fit: contain;
-      object-position: center;
-      transform: scale(1.03);
-      transform-origin: center center;
-    }
-
     .modal-close {
       position: sticky;
       top: 0;
@@ -875,6 +817,35 @@
       color: var(--muted);
       font-size: 0.96rem;
       max-width: 760px;
+    }
+
+    /* Master Planner detail: full frame visible (no side crop); letterbox #1a1a1a */
+    #masterPlannerModal .device-screen {
+      background: #1a1a1a;
+    }
+
+    #masterPlannerModal .device-screen video {
+      object-fit: contain;
+      object-position: center;
+      background: #1a1a1a;
+    }
+
+    /* 2nd video at 96% scale inside screen (frame unchanged) */
+    #masterPlannerModal .feature-stack > .feature-card:nth-child(2) .device-screen video {
+      transform: scale(0.96);
+      transform-origin: center center;
+    }
+
+    /* 4th video at 94% scale inside screen (frame unchanged) */
+    #masterPlannerModal .feature-stack > .feature-card:nth-child(4) .device-screen video {
+      transform: scale(0.94);
+      transform-origin: center center;
+    }
+
+    /* Peak hour / XLSX slide: white letterbox around video */
+    #masterPlannerModal .feature-stack > .feature-card:nth-child(7) .device-screen,
+    #masterPlannerModal .feature-stack > .feature-card:nth-child(7) .device-screen video {
+      background: #ffffff;
     }
 
     .feature-stack {
@@ -1002,6 +973,180 @@
       font-weight: 700;
       letter-spacing: 0.08em;
       text-transform: uppercase;
+    }
+
+    .feature-xlsx-badge,
+    .feature-scenario-badge,
+    .feature-source-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle;
+      margin: 0 0.085em;
+      padding: 0.27em 0.66em 0.29em;
+      border-radius: 999px;
+      font-size: 0.646em;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .feature-xlsx-badge {
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: #15803d;
+      color: #ffffff;
+      letter-spacing: 0.02em;
+      box-shadow: 0 1px 3px rgba(21, 128, 61, 0.22);
+    }
+
+    .feature-scenario-badge {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: #52525b;
+      color: #ffffff;
+      letter-spacing: 0.03em;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    }
+
+    .feature-source-badge-group {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.323em;
+      margin-left: 0.357em;
+      vertical-align: middle;
+    }
+
+    .feature-source-badge {
+      padding: 0.27em 0.61em 0.29em;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: #52525b;
+      color: #ffffff;
+      letter-spacing: 0.05em;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    }
+
+    .feature-airport-size-badge-group {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.323em;
+      margin: 0 0.22em;
+      vertical-align: middle;
+    }
+
+    .feature-airport-size-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle;
+      padding: 0.27em 0.62em 0.29em;
+      border-radius: 999px;
+      font-size: 0.646em;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.14);
+    }
+
+    .feature-airport-size-badge--sm {
+      background: #64748b;
+    }
+
+    .feature-airport-size-badge--md {
+      background: #0d9488;
+    }
+
+    .feature-airport-size-badge--lg {
+      background: #7c3aed;
+    }
+
+    .feature-pct-badge-group {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.323em;
+      margin: 0 0.12em;
+      vertical-align: middle;
+    }
+
+    .feature-pct-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle;
+      padding: 0.27em 0.58em 0.29em;
+      border-radius: 999px;
+      font-size: 0.646em;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: #db2777;
+      box-shadow: 0 1px 3px rgba(219, 39, 119, 0.28);
+    }
+
+    .feature-pink-badge-group {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.323em;
+      margin: 0 0.08em;
+      vertical-align: middle;
+    }
+
+    .feature-pink-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle;
+      padding: 0.27em 0.58em 0.29em;
+      border-radius: 999px;
+      font-size: 0.646em;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      color: #9d174d;
+      border: 1px solid rgba(244, 114, 182, 0.5);
+      background: linear-gradient(180deg, #fce7f3 0%, #fbcfe8 100%);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 1px 3px rgba(219, 39, 119, 0.12);
+    }
+
+    .feature-purple-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle;
+      margin: 0 0.06em;
+      padding: 0.27em 0.58em 0.29em;
+      border-radius: 999px;
+      font-size: 0.646em;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: #7c3aed;
+      box-shadow: 0 1px 3px rgba(124, 58, 237, 0.28);
+    }
+
+    .feature-flow-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle;
+      margin: 0 0.06em;
+      padding: 0.27em 0.58em 0.29em;
+      border-radius: 999px;
+      font-size: 0.646em;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: #0d9488;
+      box-shadow: 0 1px 3px rgba(13, 148, 136, 0.28);
     }
 
     .feature-note-panel {
@@ -1236,13 +1381,11 @@
             </div>
 
             <div class="card-device">
-              <div class="device-stage masterplanner-stage masterplanner-preview-stage mp-fill-29">
+              <div class="device-stage masterplanner-stage">
                 <div class="device-screen">
-                  <div class="mp-screen-fill">
-                    <video autoplay muted loop playsinline preload="none" data-autoplay-video poster="web/masterplanner/master-planner-preview-poster.webp" aria-label="BluPrint Master Planner preview">
-                      <source src="web/masterplanner/master-planner-preview.mp4" type="video/mp4">
-                    </video>
-                  </div>
+                  <video autoplay muted loop playsinline preload="none" data-autoplay-video poster="web/masterplanner/master-planner-preview-poster.webp" aria-label="BluPrint Master Planner preview">
+                    <source src="web/masterplanner/master-planner-preview.mp4" type="video/mp4">
+                  </video>
                 </div>
                 <img class="device-frame" src="web/airside_sim/macbook-frame.webp" alt="Laptop frame">
               </div>
@@ -1253,7 +1396,11 @@
             </div>
 
             <div class="product-bottom">
-              <a class="button button-primary" href="https://forms.office.com/pages/responsepage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAAO__c8PC4lUOVpPQ0pZWVBaWUxOME9VVlAyUVIzNTYxSS4u&amp;route=shorturl">Contact Us</a>
+              <div class="card-actions">
+                <a class="button button-primary" href="https://forms.office.com/pages/responsepage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAAO__c8PC4lUOVpPQ0pZWVBaWUxOME9VVlAyUVIzNTYxSS4u&amp;route=shorturl">Contact Us</a>
+                <a class="button button-solution" href="web/masterplanner/Compare_report.html" download="Compare_report.html">Compare Report &#8599;</a>
+                <a class="button button-solution" href="web/masterplanner/MP_Sample.xlsx" download="MP_Sample.xlsx">xlsx report &#8599;</a>
+              </div>
             </div>
             <span class="product-hover-link" aria-hidden="true">Learn more</span>
           </article>
@@ -1290,7 +1437,7 @@
         <div class="feature-stack">
           <section class="feature-card">
             <div class="feature-text">
-              <h3>Simultaneous analysis of <span class="feature-accent">passenger queues</span>, <span class="feature-accent">facility utilization</span>, and flow</h3>
+              <h3>Simultaneous analysis of passenger <span class="feature-scenario-badge">queues</span>, <span class="feature-purple-badge">facility utilization</span>, and <span class="feature-flow-badge">flow</span></h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1308,7 +1455,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3>Access to over <span class="feature-accent">10,000 airports</span> worldwide, with the ability to evaluate <span class="feature-accent">new airport development</span> through combined demand scenarios across multiple airports</h3>
+              <h3>Access to over <span class="feature-purple-badge">10,000 airports</span> worldwide, with the ability to evaluate <span class="feature-accent">new airport development</span> through combined demand scenarios across multiple airports</h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1344,7 +1491,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3>Optimize <span class="feature-accent">passenger experience</span> through tracking and analysis of <span class="feature-accent">passenger flow</span></h3>
+              <h3>Optimize <span class="feature-accent">passenger experience</span> through tracking and analysis of <span class="feature-flow-badge">Passenger Flow</span></h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1362,7 +1509,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">Monetize</span> waiting time and analyze <span class="feature-accent">wait times</span> for the top N% of passengers</h3>
+              <h3><span class="feature-accent">Monetize</span> waiting time and analyze <span class="feature-accent">wait times</span> for the top <span class="feature-pct-badge-group" aria-label="Top percentiles 99%, 95%, 90%"><span class="feature-pct-badge">99%</span><span class="feature-pct-badge">95%</span><span class="feature-pct-badge">90%</span></span> of passengers</h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1380,7 +1527,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3>Easily assign diverse <span class="feature-accent">passenger attributes</span> with just a few <span class="feature-accent">clicks</span></h3>
+              <h3>Easily assign diverse <span class="feature-accent">passenger attributes</span> with just a few <span class="feature-accent">clicks</span> 👆</h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1398,7 +1545,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3>Configure <span class="feature-accent">facility on/off status</span>, <span class="feature-accent">airline allocation</span>, and transaction times with a few clicks</h3>
+              <h3>Configure facility <span class="feature-scenario-badge">On/Off</span> status, <span class="feature-purple-badge">Airline</span> allocation, and <span class="feature-flow-badge">Transaction times</span> with a few clicks</h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1416,7 +1563,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">Flexible modification</span> of <span class="feature-accent">process sequences</span> and workflows</h3>
+              <h3><span class="feature-accent">Flexible modification</span> of <span class="feature-flow-badge">Process sequences</span> and workflows</h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1465,7 +1612,7 @@
         <div class="feature-stack">
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">Realistic simulation</span> of complex apron congestion, delays, and <span class="feature-accent">queuing scenarios</span></h3>
+              <h3><span class="feature-accent">Realistic simulation</span> of complex <span class="feature-scenario-badge">apron congestion</span>, <span class="feature-purple-badge">delay</span>, and <span class="feature-flow-badge">queuing</span> scenarios</h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1483,7 +1630,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">Accurate measurement</span> of runway occupancy time (ROT) and <span class="feature-accent">high-fidelity</span> aircraft &amp; ATC simulation</h3>
+              <h3><span class="feature-accent">Accurate measurement</span> of runway occupancy time <span class="feature-source-badge">ROT</span> and <span class="feature-accent">high-fidelity</span> aircraft &amp; ATC simulation</h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1501,7 +1648,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">Fast scenario testing</span> for infrastructure changes (e.g. rapid exit taxiways, apron layouts, <span class="feature-accent">runway configurations</span>)</h3>
+              <h3><span class="feature-accent">Fast scenario testing</span> for infrastructure changes <span class="feature-source-badge-group" aria-label="Examples: rapid exit taxiways, apron layouts, runway configurations"><span class="feature-scenario-badge">RET</span><span class="feature-scenario-badge">Apron</span><span class="feature-scenario-badge">Runway</span></span></h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1519,7 +1666,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">Aircraft ground</span> collision <span class="feature-accent">clearance check</span></h3>
+              <h3><span class="feature-accent">Aircraft ground</span> collision <span class="feature-accent">clearance check</span> ✅</h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1537,7 +1684,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">Analyze</span> complex simulations in <span class="feature-accent">minutes</span></h3>
+              <h3><span class="feature-accent">Analyze</span> complex simulations in <span class="feature-accent">minutes</span> 🕐</h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1591,7 +1738,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">Instant layouts</span> for 50,000 global airports-powered by <span class="feature-accent">OSM</span></h3>
+              <h3><span class="feature-accent">Instant layouts</span> for 50,000 global airports <span class="feature-airport-size-badge-group" aria-label="Airport size categories"><span class="feature-airport-size-badge feature-airport-size-badge--sm">Very Small</span><span class="feature-airport-size-badge feature-airport-size-badge--md">Middle</span><span class="feature-airport-size-badge feature-airport-size-badge--lg">Large</span></span> powered by <span class="feature-accent">OSM</span></h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1625,7 +1772,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">Configurable</span> detailed parameters such as runway separation based on <span class="feature-accent">ICAO and RECAT</span> standards</h3>
+              <h3><span class="feature-accent">Configurable</span> detailed parameters such as runway separation based on <span class="feature-source-badge">ICAO</span> and <span class="feature-source-badge">RECAT</span> standards</h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1641,7 +1788,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">Integrated</span> stand/gate allocation with runway and apron operations enabling comprehensive <span class="feature-accent">airside performance</span> insights</h3>
+              <h3><span class="feature-accent">Integrated</span> <span class="feature-scenario-badge">Stand/Gate</span> allocation with <span class="feature-purple-badge">Runway</span> and <span class="feature-flow-badge">Apron</span> operations enabling comprehensive <span class="feature-accent">airside performance</span> insights</h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1716,24 +1863,22 @@
       <div class="modal-body">
         <section class="modal-intro">
           <small>BluPrint Master Planner</small>
-          <h2 id="masterplanner-modal-title">Allocation, scenarios, and demand insight</h2>
-          <p>Score layouts, compare scenarios, and forecast demand with global economic context.</p>
+          <h2 id="masterplanner-modal-title">Easy airline reallocation,<br>Preliminary analysis</h2>
+          <p>Optimal Strategy for Airports Worldwide</p>
         </section>
 
         <div class="feature-stack">
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">Flexible allocation</span> allows optimal assignment by <span class="feature-accent">airline</span> and <span class="feature-accent">route</span> at each <span class="feature-accent">terminal</span></h3>
+              <h3><span class="feature-accent">Flexible allocation</span> allows optimal assignment <span class="feature-source-badge-group" aria-label="Assignment by airline, route, terminal"><span class="feature-purple-badge">by airline</span><span class="feature-purple-badge">by route</span><span class="feature-purple-badge">by terminal</span></span></h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
-                <div class="device-stage masterplanner-stage mp-fill-28">
+                <div class="device-stage">
                   <div class="device-screen">
-                    <div class="mp-screen-fill">
-                      <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/masterplanner/flexible-allocation-by-airline-route-poster.webp" aria-label="Slide 28 video">
-                        <source data-src="web/masterplanner/flexible-allocation-by-airline-route.mp4" type="video/mp4">
-                      </video>
-                    </div>
+                    <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/masterplanner/flexible-allocation-by-airline-route-poster.webp" aria-label="Slide 28 video">
+                      <source data-src="web/masterplanner/flexible-allocation-by-airline-route.mp4" type="video/mp4">
+                    </video>
                   </div>
                   <img class="device-frame" src="web/airside_sim/macbook-frame.webp" alt="Laptop frame">
                 </div>
@@ -1747,13 +1892,11 @@
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
-                <div class="device-stage masterplanner-stage mp-fill-29">
+                <div class="device-stage">
                   <div class="device-screen">
-                    <div class="mp-screen-fill">
-                      <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/masterplanner/master-planner-preview-poster.webp" aria-label="Slide 29 video">
-                        <source data-src="web/masterplanner/master-planner-preview.mp4" type="video/mp4">
-                      </video>
-                    </div>
+                    <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/masterplanner/master-planner-preview-poster.webp" aria-label="Slide 29 video">
+                      <source data-src="web/masterplanner/master-planner-preview.mp4" type="video/mp4">
+                    </video>
                   </div>
                   <img class="device-frame" src="web/airside_sim/macbook-frame.webp" alt="Laptop frame">
                 </div>
@@ -1763,17 +1906,15 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">Quantitative</span> decision-making supported through a <span class="feature-accent">Comparison Report</span> for <span class="feature-accent">multiple scenarios</span></h3>
+              <h3><span class="feature-accent">Quantitative</span> decision-making supported through a <span class="feature-accent">Comparison Report</span> for <span class="feature-source-badge-group" aria-label="Scenario 1, Scenario 2, Scenario 3"><span class="feature-scenario-badge">Scenario 1</span><span class="feature-scenario-badge">Scenario 2</span><span class="feature-scenario-badge">Scenario 3</span></span></h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
-                <div class="device-stage masterplanner-stage mp-fill-30">
+                <div class="device-stage">
                   <div class="device-screen">
-                    <div class="mp-screen-fill">
-                      <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/masterplanner/comparison-report-multiple-scenarios-poster.webp" aria-label="Slide 30 video">
-                        <source data-src="web/masterplanner/comparison-report-multiple-scenarios.mp4" type="video/mp4">
-                      </video>
-                    </div>
+                    <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/masterplanner/comparison-report-multiple-scenarios-poster.webp" aria-label="Slide 30 video">
+                      <source data-src="web/masterplanner/comparison-report-multiple-scenarios.mp4" type="video/mp4">
+                    </video>
                   </div>
                   <img class="device-frame" src="web/airside_sim/macbook-frame.webp" alt="Laptop frame">
                 </div>
@@ -1783,17 +1924,15 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">Global economic data</span> can be utilized for forecasting <span class="feature-accent">future aviation demand</span></h3>
+              <h3><span class="feature-accent">Global economic data</span> can be utilized for forecasting <span class="feature-accent">future aviation demand</span><span class="feature-source-badge-group" aria-label="Data sources"><span class="feature-source-badge">IMF</span><span class="feature-source-badge">OECD</span><span class="feature-source-badge">WB</span></span></h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
-                <div class="device-stage masterplanner-stage mp-fill-31">
+                <div class="device-stage">
                   <div class="device-screen">
-                    <div class="mp-screen-fill">
-                      <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/masterplanner/global-economic-forecasting-aviation-demand-poster.webp" aria-label="Slide 31 video">
-                        <source data-src="web/masterplanner/global-economic-forecasting-aviation-demand.mp4" type="video/mp4">
-                      </video>
-                    </div>
+                    <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/masterplanner/global-economic-forecasting-aviation-demand-poster.webp" aria-label="Slide 31 video">
+                      <source data-src="web/masterplanner/global-economic-forecasting-aviation-demand.mp4" type="video/mp4">
+                    </video>
                   </div>
                   <img class="device-frame" src="web/airside_sim/macbook-frame.webp" alt="Laptop frame">
                 </div>
@@ -1803,17 +1942,15 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">Multiple forecasting methodologies</span> can be applied to estimate future demand</h3>
+              <h3><span class="feature-accent">Multiple forecasting methodologies</span> can be applied to estimate future demand 📈</h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
-                <div class="device-stage masterplanner-stage mp-fill-32">
+                <div class="device-stage">
                   <div class="device-screen">
-                    <div class="mp-screen-fill">
-                      <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/masterplanner/forecasting-methodologies-poster.webp" aria-label="Slide 32 video">
-                        <source data-src="web/masterplanner/forecasting-methodologies.mp4" type="video/mp4">
-                      </video>
-                    </div>
+                    <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/masterplanner/forecasting-methodologies-poster.webp" aria-label="Slide 32 video">
+                      <source data-src="web/masterplanner/forecasting-methodologies.mp4" type="video/mp4">
+                    </video>
                   </div>
                   <img class="device-frame" src="web/airside_sim/macbook-frame.webp" alt="Laptop frame">
                 </div>
@@ -1823,17 +1960,15 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">Multiple forecasting methodologies</span> can be applied to estimate future demand</h3>
+              <h3>With one click of <span class="feature-purple-badge">Run</span>, you can complete all airport analyses.</h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
-                <div class="device-stage masterplanner-stage mp-fill-33">
+                <div class="device-stage">
                   <div class="device-screen">
-                    <div class="mp-screen-fill">
-                      <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/masterplanner/forecasting-methodologies-demand-estimation-poster.webp" aria-label="Slide 33 video">
-                        <source data-src="web/masterplanner/forecasting-methodologies-demand-estimation.mp4" type="video/mp4">
-                      </video>
-                    </div>
+                    <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/masterplanner/forecasting-methodologies-demand-estimation-poster.webp" aria-label="Run completes all airport analyses video">
+                      <source data-src="web/masterplanner/forecasting-methodologies-demand-estimation.mp4" type="video/mp4">
+                    </video>
                   </div>
                   <img class="device-frame" src="web/airside_sim/macbook-frame.webp" alt="Laptop frame">
                 </div>
@@ -1843,17 +1978,15 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">Automatic generation</span> of XLSX files for <span class="feature-accent">peak hour</span> analysis and profiling, combining historical analysis and future forecasting that previously took months</h3>
+              <h3><span class="feature-accent">Automatic generation</span> of <span class="feature-xlsx-badge">XLSX files</span> for <span class="feature-accent">peak hour</span> analysis and profiling, combining historical analysis and future forecasting that previously took months</h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
-                <div class="device-stage masterplanner-stage mp-fill-34">
+                <div class="device-stage">
                   <div class="device-screen">
-                    <div class="mp-screen-fill">
-                      <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/masterplanner/peak-hour-xlsx-profiling-automation-poster.webp" aria-label="Slide 34 video">
-                        <source data-src="web/masterplanner/peak-hour-xlsx-profiling-automation.mp4" type="video/mp4">
-                      </video>
-                    </div>
+                    <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/masterplanner/peak-hour-xlsx-profiling-automation-poster.webp" aria-label="Slide 34 video">
+                      <source data-src="web/masterplanner/peak-hour-xlsx-profiling-automation.mp4" type="video/mp4">
+                    </video>
                   </div>
                   <img class="device-frame" src="web/airside_sim/macbook-frame.webp" alt="Laptop frame">
                 </div>
