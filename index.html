@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-root-lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -36,6 +36,9 @@
       --radius-lg: 28px;
       --radius-md: 22px;
       --wrap: min(1520px, calc(100vw - 60px));
+      /* .wrap 과 동일한 가로 여백 (콘텐츠 오른쪽 끝과 정렬) */
+      --align-with-wrap-right: max(env(safe-area-inset-right, 0px), calc((100vw - min(1520px, calc(100vw - 60px))) / 2));
+      --lang-switch-radius: 14px;
       --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
       --ease-snappy: cubic-bezier(0.2, 0, 0, 1);
     }
@@ -711,7 +714,7 @@
     .modal-shell {
       position: fixed;
       inset: 0;
-      z-index: 50;
+      z-index: 1100;
       display: grid;
       place-items: center;
       padding: 24px;
@@ -731,6 +734,24 @@
       background: rgba(99, 99, 104, 0.18);
       opacity: 0;
       transition: opacity 0.5s var(--ease-smooth);
+    }
+
+    .modal-card--about {
+      width: min(640px, calc(100vw - 34px));
+    }
+
+    .modal-about-prose {
+      display: grid;
+      gap: 1.05rem;
+      padding-top: 4px;
+    }
+
+    .modal-about-prose p {
+      margin: 0;
+      font-size: 0.94rem;
+      line-height: 1.72;
+      letter-spacing: -0.012em;
+      color: #3d3d42;
     }
 
     .modal-card {
@@ -1243,6 +1264,220 @@
       }
     }
 
+    .lang-switch {
+      position: fixed;
+      top: 28px;
+      right: var(--align-with-wrap-right);
+      z-index: 900;
+      font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .lang-switch__row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 10px;
+      max-width: var(--wrap);
+    }
+
+    .lang-switch__lang-wrap {
+      position: relative;
+    }
+
+    .lang-switch__about {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 30px;
+      padding: 6px 14px;
+      border-radius: var(--lang-switch-radius);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      color: #2c2c30;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.97) 0%, rgba(248, 248, 250, 0.94) 100%);
+      border: 1px solid rgba(17, 17, 19, 0.1);
+      box-shadow: 0 2px 14px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+      transition: background 0.2s var(--ease-snappy), box-shadow 0.2s var(--ease-snappy), transform 0.2s var(--ease-smooth), border-color 0.2s ease;
+    }
+
+    .lang-switch__about:hover {
+      background: #ffffff;
+      border-color: rgba(44, 119, 255, 0.28);
+      box-shadow: 0 6px 22px rgba(44, 119, 255, 0.12);
+      transform: translateY(-1px);
+    }
+
+    .lang-switch__about:active {
+      transform: translateY(0);
+    }
+
+    .lang-switch__btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      min-width: auto;
+      min-height: 30px;
+      padding: 3px 8px 3px 6px;
+      border-radius: var(--lang-switch-radius);
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(17, 17, 19, 0.08);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+      font-size: 0.95rem;
+      line-height: 1;
+      transition: background 0.2s var(--ease-snappy), box-shadow 0.2s var(--ease-snappy), transform 0.2s var(--ease-smooth);
+    }
+
+    .lang-switch__btn-en {
+      font-size: 0.58rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      color: #3d3d41;
+      line-height: 1.1;
+      max-width: 4.5rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .lang-switch__btn:hover {
+      background: #ffffff;
+      box-shadow: 0 6px 22px rgba(0, 0, 0, 0.12);
+      transform: translateY(-1px);
+    }
+
+    .lang-switch__btn[aria-expanded="true"] {
+      box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.22);
+    }
+
+    /* 작은 원형 국기 (PNG, flagcdn) */
+    .lang-flag-round {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+      border: 1px solid rgba(17, 17, 19, 0.12);
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.45) inset;
+      background: #e8eaed;
+    }
+
+    .lang-switch__glyph {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 0;
+    }
+
+    .lang-switch__glyph .lang-flag-round {
+      width: 15px;
+      height: 15px;
+    }
+
+    .lang-switch__menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      right: 0;
+      min-width: min(232px, calc(100vw - 60px));
+      max-height: min(70vh, 420px);
+      overflow-y: auto;
+      padding: 6px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid rgba(17, 17, 19, 0.08);
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.14);
+      backdrop-filter: blur(16px);
+    }
+
+    .lang-switch__menu[hidden] {
+      display: none !important;
+    }
+
+    .lang-switch__item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      text-align: left;
+      padding: 6px 8px;
+      border-radius: 10px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: #1d1d1f;
+      transition: background 0.18s ease;
+    }
+
+    .lang-switch__item:hover {
+      background: rgba(0, 113, 227, 0.08);
+    }
+
+    .lang-switch__item.is-active {
+      background: rgba(0, 113, 227, 0.12);
+      color: var(--blue);
+    }
+
+    .lang-switch__flag {
+      flex: 0 0 auto;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+    }
+
+    .lang-switch__name {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      min-width: 0;
+    }
+
+    .lang-switch__en {
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: #1d1d1f;
+      line-height: 1.2;
+    }
+
+    .lang-switch__native {
+      font-size: 0.58rem;
+      font-weight: 500;
+      color: #6e6e73;
+      line-height: 1.2;
+    }
+
+    @media (max-width: 760px) {
+      .lang-switch {
+        top: 24px;
+        right: var(--align-with-wrap-right);
+      }
+
+      .lang-switch__row {
+        gap: 8px;
+        max-width: var(--wrap);
+      }
+
+      .lang-switch__about {
+        font-size: 0.66rem;
+        padding: 5px 11px;
+      }
+
+      .lang-switch__btn {
+        min-height: 28px;
+        padding: 2px 7px 2px 5px;
+        font-size: 0.88rem;
+      }
+
+      .lang-switch__btn-en {
+        font-size: 0.54rem;
+        max-width: 3.8rem;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       .site-shell,
       .product-card,
@@ -1265,6 +1500,120 @@
   </style>
 </head>
 <body>
+  <div class="lang-switch" id="langSwitch">
+    <div class="lang-switch__row">
+      <button
+        type="button"
+        class="lang-switch__about"
+        id="flexaAboutTrigger"
+        data-open-modal="flexaAbout"
+        data-i18n="flexa_about_cta"
+        data-i18n-aria="aria_flexa_about"
+      >About Flexa</button>
+      <div class="lang-switch__lang-wrap">
+    <button
+      type="button"
+      class="lang-switch__btn"
+      id="langSwitchBtn"
+      aria-expanded="false"
+      aria-haspopup="menu"
+      aria-controls="langSwitchMenu"
+      data-i18n-title="lang_switch_title"
+      title="Language"
+    >
+      <span class="lang-switch__glyph" id="langSwitchGlyph" aria-hidden="true">
+        <img
+          id="langSwitchGlyphImg"
+          class="lang-flag-round"
+          src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f310.png"
+          width="16"
+          height="16"
+          alt=""
+          decoding="async"
+        >
+      </span>
+      <span class="lang-switch__btn-en" id="langSwitchBtnEn" aria-hidden="true">English</span>
+    </button>
+    <div class="lang-switch__menu" id="langSwitchMenu" role="menu" hidden data-lang-menu>
+      <button type="button" class="lang-switch__item" role="menuitem" data-lang="en" data-lang-name="English" data-lang-en="English">
+        <span class="lang-switch__flag" aria-hidden="true">
+          <img
+            class="lang-flag-round"
+            src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f310.png"
+            width="16"
+            height="16"
+            alt=""
+            loading="lazy"
+            decoding="async"
+          >
+        </span>
+        <span class="lang-switch__name"><span class="lang-switch__en">English</span></span>
+      </button>
+      <button type="button" class="lang-switch__item" role="menuitem" data-lang="ko" data-lang-code="kr" data-lang-name="한국어" data-lang-en="Korean">
+        <span class="lang-switch__flag" aria-hidden="true">
+          <img class="lang-flag-round" src="https://flagcdn.com/w40/kr.png" srcset="https://flagcdn.com/w80/kr.png 2x" width="16" height="16" alt="" loading="lazy" decoding="async">
+        </span>
+        <span class="lang-switch__name"><span class="lang-switch__en">Korean</span><span class="lang-switch__native">한국어</span></span>
+      </button>
+      <button type="button" class="lang-switch__item" role="menuitem" data-lang="zh" data-lang-code="cn" data-lang-name="中文" data-lang-en="Chinese">
+        <span class="lang-switch__flag" aria-hidden="true">
+          <img class="lang-flag-round" src="https://flagcdn.com/w40/cn.png" srcset="https://flagcdn.com/w80/cn.png 2x" width="16" height="16" alt="" loading="lazy" decoding="async">
+        </span>
+        <span class="lang-switch__name"><span class="lang-switch__en">Chinese</span><span class="lang-switch__native">中文</span></span>
+      </button>
+      <button type="button" class="lang-switch__item" role="menuitem" data-lang="ja" data-lang-code="jp" data-lang-name="日本語" data-lang-en="Japanese">
+        <span class="lang-switch__flag" aria-hidden="true">
+          <img class="lang-flag-round" src="https://flagcdn.com/w40/jp.png" srcset="https://flagcdn.com/w80/jp.png 2x" width="16" height="16" alt="" loading="lazy" decoding="async">
+        </span>
+        <span class="lang-switch__name"><span class="lang-switch__en">Japanese</span><span class="lang-switch__native">日本語</span></span>
+      </button>
+      <button type="button" class="lang-switch__item" role="menuitem" data-lang="es" data-lang-code="es" data-lang-name="Español" data-lang-en="Spanish">
+        <span class="lang-switch__flag" aria-hidden="true">
+          <img class="lang-flag-round" src="https://flagcdn.com/w40/es.png" srcset="https://flagcdn.com/w80/es.png 2x" width="16" height="16" alt="" loading="lazy" decoding="async">
+        </span>
+        <span class="lang-switch__name"><span class="lang-switch__en">Spanish</span><span class="lang-switch__native">Español</span></span>
+      </button>
+      <button type="button" class="lang-switch__item" role="menuitem" data-lang="th" data-lang-code="th" data-lang-name="ไทย" data-lang-en="Thai">
+        <span class="lang-switch__flag" aria-hidden="true">
+          <img class="lang-flag-round" src="https://flagcdn.com/w40/th.png" srcset="https://flagcdn.com/w80/th.png 2x" width="16" height="16" alt="" loading="lazy" decoding="async">
+        </span>
+        <span class="lang-switch__name"><span class="lang-switch__en">Thai</span><span class="lang-switch__native">ไทย</span></span>
+      </button>
+      <button type="button" class="lang-switch__item" role="menuitem" data-lang="vi" data-lang-code="vn" data-lang-name="Tiếng Việt" data-lang-en="Vietnamese">
+        <span class="lang-switch__flag" aria-hidden="true">
+          <img class="lang-flag-round" src="https://flagcdn.com/w40/vn.png" srcset="https://flagcdn.com/w80/vn.png 2x" width="16" height="16" alt="" loading="lazy" decoding="async">
+        </span>
+        <span class="lang-switch__name"><span class="lang-switch__en">Vietnamese</span><span class="lang-switch__native">Tiếng Việt</span></span>
+      </button>
+      <button type="button" class="lang-switch__item" role="menuitem" data-lang="id" data-lang-code="id" data-lang-name="Bahasa Indonesia" data-lang-en="Indonesian">
+        <span class="lang-switch__flag" aria-hidden="true">
+          <img class="lang-flag-round" src="https://flagcdn.com/w40/id.png" srcset="https://flagcdn.com/w80/id.png 2x" width="16" height="16" alt="" loading="lazy" decoding="async">
+        </span>
+        <span class="lang-switch__name"><span class="lang-switch__en">Indonesian</span><span class="lang-switch__native">Bahasa Indonesia</span></span>
+      </button>
+      <button type="button" class="lang-switch__item" role="menuitem" data-lang="ru" data-lang-code="ru" data-lang-name="Русский" data-lang-en="Russian">
+        <span class="lang-switch__flag" aria-hidden="true">
+          <img class="lang-flag-round" src="https://flagcdn.com/w40/ru.png" srcset="https://flagcdn.com/w80/ru.png 2x" width="16" height="16" alt="" loading="lazy" decoding="async">
+        </span>
+        <span class="lang-switch__name"><span class="lang-switch__en">Russian</span><span class="lang-switch__native">Русский</span></span>
+      </button>
+      <button type="button" class="lang-switch__item" role="menuitem" data-lang="uz" data-lang-code="uz" data-lang-name="Oʻzbek" data-lang-en="Uzbek">
+        <span class="lang-switch__flag" aria-hidden="true">
+          <img class="lang-flag-round" src="https://flagcdn.com/w40/uz.png" srcset="https://flagcdn.com/w80/uz.png 2x" width="16" height="16" alt="" loading="lazy" decoding="async">
+        </span>
+        <span class="lang-switch__name"><span class="lang-switch__en">Uzbek</span><span class="lang-switch__native">Oʻzbek</span></span>
+      </button>
+      <button type="button" class="lang-switch__item" role="menuitem" data-lang="kk" data-lang-code="kz" data-lang-name="Қазақша" data-lang-en="Kazakh">
+        <span class="lang-switch__flag" aria-hidden="true">
+          <img class="lang-flag-round" src="https://flagcdn.com/w40/kz.png" srcset="https://flagcdn.com/w80/kz.png 2x" width="16" height="16" alt="" loading="lazy" decoding="async">
+        </span>
+        <span class="lang-switch__name"><span class="lang-switch__en">Kazakh</span><span class="lang-switch__native">Қазақша</span></span>
+      </button>
+    </div>
+      </div>
+    </div>
+  </div>
+
   <div class="site-shell">
     <header class="hero">
       <div class="wrap hero-inner">
@@ -1296,8 +1645,8 @@
 
     <main class="products-section">
       <div class="wrap">
-        <section class="product-grid" aria-label="Planning products">
-          <article class="product-card" role="button" tabindex="0" aria-label="Select Simmula Terminal Optimizer" data-card-modal="simmula">
+        <section class="product-grid" data-i18n-aria="aria_planning_products" aria-label="Planning products">
+          <article class="product-card" role="button" tabindex="0" data-i18n-aria="aria_card_simmula" aria-label="Select Simmula Terminal Optimizer" data-card-modal="simmula">
             <div class="product-top">
               <h2 class="product-title stacked"><span class="product-title-brand simmula">Simmula</span><span class="product-title-name">Terminal Optimizer</span></h2>
             </div>
@@ -1313,6 +1662,7 @@
                     preload="none"
                     data-autoplay-video
                     poster="web/simmula/passenger-queues-facility-flow-poster.webp"
+                    data-i18n-aria="aria_preview_simmula"
                     aria-label="Simmula Terminal Optimizer preview"
                   >
                     <source src="web/simmula/passenger-queues-facility-flow.mp4" type="video/mp4">
@@ -1330,15 +1680,15 @@
 
             <div class="product-bottom">
               <div class="card-actions">
-                <a class="button button-primary" href="https://forms.office.com/pages/responsepage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAAO__c8PC4lUOVpPQ0pZWVBaWUxOME9VVlAyUVIzNTYxSS4u&amp;route=shorturl">Contact Us</a>
-                <a class="button button-solution" href="https://flexa.kr/auth/login">Open App &#8599;</a>
-                <a class="button button-solution" href="web/simmula/Simmula_Sample.html" download="Simmula_Sample.html">Sample &#8599;</a>
+                <a class="button button-primary" href="https://forms.office.com/pages/responsepage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAAO__c8PC4lUOVpPQ0pZWVBaWUxOME9VVlAyUVIzNTYxSS4u&amp;route=shorturl" data-i18n="btn_contact">Contact Us</a>
+                <a class="button button-solution" href="https://flexa.kr/auth/login" data-i18n="btn_open_app">Solution &#8599;</a>
+                <a class="button button-solution" href="web/simmula/Simmula_Sample.html" download="Simmula_Sample.html" data-i18n="btn_sample">Sample &#8599;</a>
               </div>
             </div>
-            <span class="product-hover-link" aria-hidden="true">Learn more</span>
+            <span class="product-hover-link" aria-hidden="true" data-i18n="btn_learn_more">Learn more</span>
           </article>
 
-          <article class="product-card" role="button" tabindex="0" aria-label="Select BluPrint Airside Designer" data-card-modal="airside">
+          <article class="product-card" role="button" tabindex="0" data-i18n-aria="aria_card_airside" aria-label="Select BluPrint Airside Designer" data-card-modal="airside">
             <div class="product-top">
               <h2 class="product-title stacked"><span class="product-title-brand">BluPrint</span><span class="product-title-name">Airside Designer</span></h2>
             </div>
@@ -1354,6 +1704,7 @@
                     preload="none"
                     data-autoplay-video
                     poster="web/airside_sim/airside-designer-preview-poster.webp"
+                    data-i18n-aria="aria_preview_airside"
                     aria-label="BluPrint Airside Designer preview"
                   >
                     <source src="web/airside_sim/airside-designer-preview.mp4" type="video/mp4">
@@ -1370,12 +1721,12 @@
             </div>
 
             <div class="product-bottom">
-              <a class="button button-primary" href="https://forms.office.com/pages/responsepage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAAO__c8PC4lUOVpPQ0pZWVBaWUxOME9VVlAyUVIzNTYxSS4u&amp;route=shorturl">Contact Us</a>
+              <a class="button button-primary" href="https://forms.office.com/pages/responsepage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAAO__c8PC4lUOVpPQ0pZWVBaWUxOME9VVlAyUVIzNTYxSS4u&amp;route=shorturl" data-i18n="btn_contact">Contact Us</a>
             </div>
-            <span class="product-hover-link" aria-hidden="true">Learn more</span>
+            <span class="product-hover-link" aria-hidden="true" data-i18n="btn_learn_more">Learn more</span>
           </article>
 
-          <article class="product-card" role="button" tabindex="0" aria-label="Select BluPrint Master Planner" data-card-modal="masterplanner">
+          <article class="product-card" role="button" tabindex="0" data-i18n-aria="aria_card_mp" aria-label="Select BluPrint Master Planner" data-card-modal="masterplanner">
             <div class="product-top">
               <h2 class="product-title stacked"><span class="product-title-brand">BluPrint</span><span class="product-title-name">Master Planner</span></h2>
             </div>
@@ -1383,7 +1734,7 @@
             <div class="card-device">
               <div class="device-stage masterplanner-stage">
                 <div class="device-screen">
-                  <video autoplay muted loop playsinline preload="none" data-autoplay-video poster="web/masterplanner/master-planner-preview-poster.webp" aria-label="BluPrint Master Planner preview">
+                  <video autoplay muted loop playsinline preload="none" data-autoplay-video poster="web/masterplanner/master-planner-preview-poster.webp" data-i18n-aria="aria_preview_mp" aria-label="BluPrint Master Planner preview">
                     <source src="web/masterplanner/master-planner-preview.mp4" type="video/mp4">
                   </video>
                 </div>
@@ -1397,12 +1748,12 @@
 
             <div class="product-bottom">
               <div class="card-actions">
-                <a class="button button-primary" href="https://forms.office.com/pages/responsepage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAAO__c8PC4lUOVpPQ0pZWVBaWUxOME9VVlAyUVIzNTYxSS4u&amp;route=shorturl">Contact Us</a>
-                <a class="button button-solution" href="web/masterplanner/Compare_report.html" download="Compare_report.html">Compare Report &#8599;</a>
-                <a class="button button-solution" href="web/masterplanner/MP_Sample.xlsx" download="MP_Sample.xlsx">xlsx report &#8599;</a>
+                <a class="button button-primary" href="https://forms.office.com/pages/responsepage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAAO__c8PC4lUOVpPQ0pZWVBaWUxOME9VVlAyUVIzNTYxSS4u&amp;route=shorturl" data-i18n="btn_contact">Contact Us</a>
+                <a class="button button-solution" href="web/masterplanner/Compare_report.html" download="Compare_report.html" data-i18n="btn_compare_report">Compare Report &#8599;</a>
+                <a class="button button-solution" href="web/masterplanner/MP_Sample.xlsx" download="MP_Sample.xlsx" data-i18n="btn_xlsx">xlsx report &#8599;</a>
               </div>
             </div>
-            <span class="product-hover-link" aria-hidden="true">Learn more</span>
+            <span class="product-hover-link" aria-hidden="true" data-i18n="btn_learn_more">Learn more</span>
           </article>
         </section>
       </div>
@@ -1412,10 +1763,10 @@
       <div class="wrap contacts-inner">
         <div class="contacts-brand">
           <img src="web/airside_sim/flexa-footer-icon.webp" alt="Flexa icon">
-          <span>TeamFlexa CO., LTD.</span>
+          <span data-i18n="footer_company">TeamFlexa CO., LTD.</span>
         </div>
         <div class="contacts-meta">
-          <span>Copyright 2026 TeamFlexa CO., LTD. All rights reserved.</span>
+          <span data-i18n="footer_copyright">Copyright 2026 TeamFlexa CO., LTD. All rights reserved.</span>
         </div>
       </div>
     </footer>
@@ -1425,19 +1776,19 @@
     <div class="modal-backdrop" data-close-modal></div>
     <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="simmula-modal-title">
       <div class="modal-close">
-        <button type="button" aria-label="Close Terminal Optimizer detail" data-close-modal>&times;</button>
+        <button type="button" data-i18n-aria="aria_close_simmula" aria-label="Close Terminal Optimizer detail" data-close-modal>&times;</button>
       </div>
       <div class="modal-body">
         <section class="modal-intro">
           <small>Simmula Terminal Optimizer</small>
           <h2 id="simmula-modal-title">Minimize queues, maximize revenue</h2>
-          <p>Simultaneous analysis of passenger queues, facility utilization, and flow.</p>
+          <p data-i18n="simmula_intro_p">Simultaneous analysis of passenger queues, facility utilization, and flow.</p>
         </section>
 
         <div class="feature-stack">
           <section class="feature-card">
             <div class="feature-text">
-              <h3>Simultaneous analysis of passenger <span class="feature-scenario-badge">queues</span>, <span class="feature-purple-badge">facility utilization</span>, and <span class="feature-flow-badge">flow</span></h3>
+              <h3 data-i18n-html="simmula_f1_h3">Simultaneous analysis of passenger <span class="feature-scenario-badge">queues</span>, <span class="feature-purple-badge">facility utilization</span>, and <span class="feature-flow-badge">flow</span></h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1455,7 +1806,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3>Access to over <span class="feature-purple-badge">10,000 airports</span> worldwide, with the ability to evaluate <span class="feature-accent">new airport development</span> through combined demand scenarios across multiple airports</h3>
+              <h3 data-i18n-html="simmula_f2_h3">Access to over <span class="feature-purple-badge">10,000 airports</span> worldwide, with the ability to evaluate <span class="feature-accent">new airport development</span> through combined demand scenarios across multiple airports</h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1473,7 +1824,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3>Identify <span class="feature-accent">root causes</span> of queues and assess <span class="feature-accent">resource status</span> at every passenger touchpoint</h3>
+              <h3 data-i18n-html="simmula_f3_h3">Identify <span class="feature-accent">root causes</span> of queues and assess <span class="feature-accent">resource status</span> at every passenger touchpoint</h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1491,7 +1842,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3>Optimize <span class="feature-accent">passenger experience</span> through tracking and analysis of <span class="feature-flow-badge">Passenger Flow</span></h3>
+              <h3 data-i18n-html="simmula_f4_h3">Optimize <span class="feature-accent">passenger experience</span> through tracking and analysis of <span class="feature-flow-badge">Passenger Flow</span></h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1509,7 +1860,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">Monetize</span> waiting time and analyze <span class="feature-accent">wait times</span> for the top <span class="feature-pct-badge-group" aria-label="Top percentiles 99%, 95%, 90%"><span class="feature-pct-badge">99%</span><span class="feature-pct-badge">95%</span><span class="feature-pct-badge">90%</span></span> of passengers</h3>
+              <h3 data-i18n-html="simmula_f5_h3"><span class="feature-accent">Monetize</span> waiting time and analyze <span class="feature-accent">wait times</span> for the top <span class="feature-pct-badge-group" aria-label="Top percentiles 99%, 95%, 90%"><span class="feature-pct-badge">99%</span><span class="feature-pct-badge">95%</span><span class="feature-pct-badge">90%</span></span> of passengers</h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1527,7 +1878,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3>Easily assign diverse <span class="feature-accent">passenger attributes</span> with just a few <span class="feature-accent">clicks</span> 👆</h3>
+              <h3 data-i18n-html="simmula_f6_h3">Easily assign diverse <span class="feature-accent">passenger attributes</span> with just a few <span class="feature-accent">clicks</span> 👆</h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1545,7 +1896,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3>Configure facility <span class="feature-scenario-badge">On/Off</span> status, <span class="feature-purple-badge">Airline</span> allocation, and <span class="feature-flow-badge">Transaction times</span> with a few clicks</h3>
+              <h3 data-i18n-html="simmula_f7_h3">Configure facility <span class="feature-scenario-badge">On/Off</span> status, <span class="feature-purple-badge">Airline</span> allocation, and <span class="feature-flow-badge">Transaction times</span> with a few clicks</h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1563,7 +1914,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">Flexible modification</span> of <span class="feature-flow-badge">Process sequences</span> and workflows</h3>
+              <h3 data-i18n-html="simmula_f8_h3"><span class="feature-accent">Flexible modification</span> of <span class="feature-flow-badge">Process sequences</span> and workflows</h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1581,14 +1932,14 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <span class="feature-label">Contact</span>
-              <h3>Contact Us</h3>
-              <p class="contact-note">
+              <span class="feature-label" data-i18n="simmula_contact_label">Contact</span>
+              <h3 data-i18n="simmula_contact_h3">Contact Us</h3>
+              <p class="contact-note" data-i18n="simmula_contact_note">
                 Organization, consulting / solution type, and project characteristics.
               </p>
             </div>
             <div class="feature-actions">
-              <a class="button button-primary" href="https://forms.office.com/pages/responsepage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAAO__c8PC4lUOVpPQ0pZWVBaWUxOME9VVlAyUVIzNTYxSS4u&amp;route=shorturl">Contact Us</a>
+              <a class="button button-primary" href="https://forms.office.com/pages/responsepage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAAO__c8PC4lUOVpPQ0pZWVBaWUxOME9VVlAyUVIzNTYxSS4u&amp;route=shorturl" data-i18n="btn_contact">Contact Us</a>
             </div>
           </section>
         </div>
@@ -1600,19 +1951,19 @@
     <div class="modal-backdrop" data-close-modal></div>
     <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="airside-modal-title">
       <div class="modal-close">
-        <button type="button" aria-label="Close Airside detail" data-close-modal>&times;</button>
+        <button type="button" data-i18n-aria="aria_close_airside" aria-label="Close Airside detail" data-close-modal>&times;</button>
       </div>
       <div class="modal-body">
         <section class="modal-intro">
           <small>BluPrint Airside Designer</small>
           <h2 id="airside-modal-title">Simple, fast, yet precise</h2>
-          <p>Optimal Strategy for Airports Worldwide</p>
+          <p data-i18n="airside_intro_p">Optimal Strategy for Airports Worldwide</p>
         </section>
 
         <div class="feature-stack">
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">Realistic simulation</span> of complex <span class="feature-scenario-badge">apron congestion</span>, <span class="feature-purple-badge">delay</span>, and <span class="feature-flow-badge">queuing</span> scenarios</h3>
+              <h3 data-i18n-html="airside_f1_h3"><span class="feature-accent">Realistic simulation</span> of complex <span class="feature-scenario-badge">apron congestion</span>, <span class="feature-purple-badge">delay</span>, and <span class="feature-flow-badge">queuing</span> scenarios</h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1630,7 +1981,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">Accurate measurement</span> of runway occupancy time <span class="feature-source-badge">ROT</span> and <span class="feature-accent">high-fidelity</span> aircraft &amp; ATC simulation</h3>
+              <h3 data-i18n-html="airside_f2_h3"><span class="feature-accent">Accurate measurement</span> of runway occupancy time <span class="feature-source-badge">ROT</span> and <span class="feature-accent">high-fidelity</span> aircraft &amp; ATC simulation</h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1648,7 +1999,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">Fast scenario testing</span> for infrastructure changes <span class="feature-source-badge-group" aria-label="Examples: rapid exit taxiways, apron layouts, runway configurations"><span class="feature-scenario-badge">RET</span><span class="feature-scenario-badge">Apron</span><span class="feature-scenario-badge">Runway</span></span></h3>
+              <h3 data-i18n-html="airside_f3_h3"><span class="feature-accent">Fast scenario testing</span> for infrastructure changes <span class="feature-source-badge-group" aria-label="Examples: rapid exit taxiways, apron layouts, runway configurations"><span class="feature-scenario-badge">RET</span><span class="feature-scenario-badge">Apron</span><span class="feature-scenario-badge">Runway</span></span></h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1666,7 +2017,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">Aircraft ground</span> collision <span class="feature-accent">clearance check</span> ✅</h3>
+              <h3 data-i18n-html="airside_f4_h3"><span class="feature-accent">Aircraft ground</span> collision <span class="feature-accent">clearance check</span> ✅</h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1684,7 +2035,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">Analyze</span> complex simulations in <span class="feature-accent">minutes</span> 🕐</h3>
+              <h3 data-i18n-html="airside_f5_h3"><span class="feature-accent">Analyze</span> complex simulations in <span class="feature-accent">minutes</span> 🕐</h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1702,7 +2053,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">Easy</span> Layout <span class="feature-accent">Setting</span></h3>
+              <h3 data-i18n-html="airside_f6_h3"><span class="feature-accent">Easy</span> Layout <span class="feature-accent">Setting</span></h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1720,7 +2071,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">3D</span> <span class="feature-accent">Model</span></h3>
+              <h3 data-i18n-html="airside_f7_h3"><span class="feature-accent">3D</span> <span class="feature-accent">Model</span></h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1738,7 +2089,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">Instant layouts</span> for 50,000 global airports <span class="feature-airport-size-badge-group" aria-label="Airport size categories"><span class="feature-airport-size-badge feature-airport-size-badge--sm">Very Small</span><span class="feature-airport-size-badge feature-airport-size-badge--md">Middle</span><span class="feature-airport-size-badge feature-airport-size-badge--lg">Large</span></span> powered by <span class="feature-accent">OSM</span></h3>
+              <h3 data-i18n-html="airside_f8_h3"><span class="feature-accent">Instant layouts</span> for 50,000 global airports <span class="feature-airport-size-badge-group" aria-label="Airport size categories"><span class="feature-airport-size-badge feature-airport-size-badge--sm">Very Small</span><span class="feature-airport-size-badge feature-airport-size-badge--md">Middle</span><span class="feature-airport-size-badge feature-airport-size-badge--lg">Large</span></span> powered by <span class="feature-accent">OSM</span></h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1756,7 +2107,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">Apron</span> <span class="feature-accent">Planning</span></h3>
+              <h3 data-i18n-html="airside_f9_h3"><span class="feature-accent">Apron</span> <span class="feature-accent">Planning</span></h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1772,7 +2123,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">Configurable</span> detailed parameters such as runway separation based on <span class="feature-source-badge">ICAO</span> and <span class="feature-source-badge">RECAT</span> standards</h3>
+              <h3 data-i18n-html="airside_f10_h3"><span class="feature-accent">Configurable</span> detailed parameters such as runway separation based on <span class="feature-source-badge">ICAO</span> and <span class="feature-source-badge">RECAT</span> standards</h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1788,7 +2139,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">Integrated</span> <span class="feature-scenario-badge">Stand/Gate</span> allocation with <span class="feature-purple-badge">Runway</span> and <span class="feature-flow-badge">Apron</span> operations enabling comprehensive <span class="feature-accent">airside performance</span> insights</h3>
+              <h3 data-i18n-html="airside_f11_h3"><span class="feature-accent">Integrated</span> <span class="feature-scenario-badge">Stand/Gate</span> allocation with <span class="feature-purple-badge">Runway</span> and <span class="feature-flow-badge">Apron</span> operations enabling comprehensive <span class="feature-accent">airside performance</span> insights</h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1804,7 +2155,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">Rapid development</span> of models aligned with <span class="feature-accent">real-world</span> operational scale</h3>
+              <h3 data-i18n-html="airside_f12_h3"><span class="feature-accent">Rapid development</span> of models aligned with <span class="feature-accent">real-world</span> operational scale</h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1820,9 +2171,9 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">AI-powered</span> queries for rapid operational and <span class="feature-accent">infrastructure decisions</span></h3>
+              <h3 data-i18n-html="airside_f13_h3"><span class="feature-accent">AI-powered</span> queries for rapid operational and <span class="feature-accent">infrastructure decisions</span></h3>
               <div class="feature-note-row">
-                <span class="feature-status-badge">In Development</span>
+                <span class="feature-status-badge" data-i18n="badge_in_dev">In Development</span>
               </div>
             </div>
             <div class="feature-media-shell feature-laptop">
@@ -1839,14 +2190,14 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <span class="feature-label">Contact</span>
-              <h3>Contact Us</h3>
-              <p class="contact-note">
+              <span class="feature-label" data-i18n="airside_contact_label">Contact</span>
+              <h3 data-i18n="airside_contact_h3">Contact Us</h3>
+              <p class="contact-note" data-i18n="airside_contact_note">
                 Organization, consulting / solution type, and project characteristics.
               </p>
             </div>
             <div class="feature-actions">
-              <a class="button button-primary" href="https://forms.office.com/pages/responsepage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAAO__c8PC4lUOVpPQ0pZWVBaWUxOME9VVlAyUVIzNTYxSS4u&amp;route=shorturl">Contact Us</a>
+              <a class="button button-primary" href="https://forms.office.com/pages/responsepage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAAO__c8PC4lUOVpPQ0pZWVBaWUxOME9VVlAyUVIzNTYxSS4u&amp;route=shorturl" data-i18n="btn_contact">Contact Us</a>
             </div>
           </section>
         </div>
@@ -1858,19 +2209,19 @@
     <div class="modal-backdrop" data-close-modal></div>
     <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="masterplanner-modal-title">
       <div class="modal-close">
-        <button type="button" aria-label="Close Master Planner detail" data-close-modal>&times;</button>
+        <button type="button" data-i18n-aria="aria_close_mp" aria-label="Close Master Planner detail" data-close-modal>&times;</button>
       </div>
       <div class="modal-body">
         <section class="modal-intro">
           <small>BluPrint Master Planner</small>
           <h2 id="masterplanner-modal-title">Easy airline reallocation,<br>Preliminary analysis</h2>
-          <p>Optimal Strategy for Airports Worldwide</p>
+          <p data-i18n="mp_intro_p">Optimal Strategy for Airports Worldwide</p>
         </section>
 
         <div class="feature-stack">
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">Flexible allocation</span> allows optimal assignment <span class="feature-source-badge-group" aria-label="Assignment by airline, route, terminal"><span class="feature-purple-badge">by airline</span><span class="feature-purple-badge">by route</span><span class="feature-purple-badge">by terminal</span></span></h3>
+              <h3 data-i18n-html="mp_f1_h3"><span class="feature-accent">Flexible allocation</span> allows optimal assignment <span class="feature-source-badge-group" aria-label="Assignment by airline, route, terminal"><span class="feature-purple-badge">by airline</span><span class="feature-purple-badge">by route</span><span class="feature-purple-badge">by terminal</span></span></h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1888,7 +2239,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">Scoring</span> of each allocation scenario enables selection of the <span class="feature-accent">optimal layout</span></h3>
+              <h3 data-i18n-html="mp_f2_h3"><span class="feature-accent">Scoring</span> of each allocation scenario enables selection of the <span class="feature-accent">optimal layout</span></h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1906,7 +2257,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">Quantitative</span> decision-making supported through a <span class="feature-accent">Comparison Report</span> for <span class="feature-source-badge-group" aria-label="Scenario 1, Scenario 2, Scenario 3"><span class="feature-scenario-badge">Scenario 1</span><span class="feature-scenario-badge">Scenario 2</span><span class="feature-scenario-badge">Scenario 3</span></span></h3>
+              <h3 data-i18n-html="mp_f3_h3"><span class="feature-accent">Quantitative</span> decision-making supported through a <span class="feature-accent">Comparison Report</span> for <span class="feature-source-badge-group" aria-label="Scenario 1, Scenario 2, Scenario 3"><span class="feature-scenario-badge">Scenario 1</span><span class="feature-scenario-badge">Scenario 2</span><span class="feature-scenario-badge">Scenario 3</span></span></h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1924,7 +2275,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">Global economic data</span> can be utilized for forecasting <span class="feature-accent">future aviation demand</span><span class="feature-source-badge-group" aria-label="Data sources"><span class="feature-source-badge">IMF</span><span class="feature-source-badge">OECD</span><span class="feature-source-badge">WB</span></span></h3>
+              <h3 data-i18n-html="mp_f4_h3"><span class="feature-accent">Global economic data</span> can be utilized for forecasting <span class="feature-accent">future aviation demand</span><span class="feature-source-badge-group" aria-label="Data sources"><span class="feature-source-badge">IMF</span><span class="feature-source-badge">OECD</span><span class="feature-source-badge">WB</span></span></h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1942,7 +2293,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">Multiple forecasting methodologies</span> can be applied to estimate future demand 📈</h3>
+              <h3 data-i18n-html="mp_f5_h3"><span class="feature-accent">Multiple forecasting methodologies</span> can be applied to estimate future demand 📈</h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1960,7 +2311,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3>With one click of <span class="feature-purple-badge">Run</span>, you can complete all airport analyses.</h3>
+              <h3 data-i18n-html="mp_f6_h3">With one click of <span class="feature-purple-badge">Run</span>, you can complete all airport analyses.</h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1978,7 +2329,7 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <h3><span class="feature-accent">Automatic generation</span> of <span class="feature-xlsx-badge">XLSX files</span> for <span class="feature-accent">peak hour</span> analysis and profiling, combining historical analysis and future forecasting that previously took months</h3>
+              <h3 data-i18n-html="mp_f7_h3"><span class="feature-accent">Automatic generation</span> of <span class="feature-xlsx-badge">XLSX files</span> for <span class="feature-accent">peak hour</span> analysis and profiling, combining historical analysis and future forecasting that previously took months</h3>
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
@@ -1996,14 +2347,14 @@
 
           <section class="feature-card">
             <div class="feature-text">
-              <span class="feature-label">Contact</span>
-              <h3>Contact Us</h3>
-              <p class="contact-note">
+              <span class="feature-label" data-i18n="mp_contact_label">Contact</span>
+              <h3 data-i18n="mp_contact_h3">Contact Us</h3>
+              <p class="contact-note" data-i18n="mp_contact_note">
                 Organization, consulting / solution type, and project characteristics.
               </p>
             </div>
             <div class="feature-actions">
-              <a class="button button-primary" href="https://forms.office.com/pages/responsepage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAAO__c8PC4lUOVpPQ0pZWVBaWUxOME9VVlAyUVIzNTYxSS4u&amp;route=shorturl">Contact Us</a>
+              <a class="button button-primary" href="https://forms.office.com/pages/responsepage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAAO__c8PC4lUOVpPQ0pZWVBaWUxOME9VVlAyUVIzNTYxSS4u&amp;route=shorturl" data-i18n="btn_contact">Contact Us</a>
             </div>
           </section>
         </div>
@@ -2015,24 +2366,260 @@
     <div class="modal-backdrop" data-close-modal></div>
     <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="coming-soon-title">
       <div class="modal-close">
-        <button type="button" aria-label="Close placeholder modal" data-close-modal>&times;</button>
+        <button type="button" data-i18n-aria="aria_close_coming" data-close-modal>&times;</button>
       </div>
       <div class="modal-body">
         <section class="modal-intro">
           <small id="coming-soon-eyebrow">BluPrint</small>
-          <h2 id="coming-soon-title">Content will be added soon.</h2>
-          <p id="coming-soon-copy">This product can already be selected from the landing page. Its detailed content will be filled in next.</p>
+          <h2 id="coming-soon-title"></h2>
+          <p id="coming-soon-copy"></p>
         </section>
       </div>
     </div>
   </div>
 
+  <div class="modal-shell" id="flexaAboutModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-card modal-card--about" role="dialog" aria-modal="true" aria-labelledby="flexa-about-title">
+      <div class="modal-close">
+        <button type="button" data-i18n-aria="aria_close_flexa_about" data-close-modal>&times;</button>
+      </div>
+      <div class="modal-body">
+        <section class="modal-intro">
+          <h2 id="flexa-about-title" data-i18n="flexa_about_title">Who is Flexa</h2>
+          <div class="modal-about-prose">
+            <p data-i18n="flexa_about_p1"></p>
+            <p data-i18n="flexa_about_p2"></p>
+            <p data-i18n="flexa_about_p3"></p>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script src="i18n.js"></script>
   <script>
+    const FLEXA_LANGS = ["en", "ko", "zh", "ja", "es", "th", "vi", "id", "ru", "uz", "kk"];
+    const FLEXA_HTML_LANG = { en: "en", ko: "ko", zh: "zh-Hans", ja: "ja", es: "es", th: "th", vi: "vi", id: "id", ru: "ru", uz: "uz", kk: "kk" };
+
+    const t = (lang, key) => {
+      const pack = window.FLEXA_I18N && window.FLEXA_I18N[lang];
+      const fallback = window.FLEXA_I18N && window.FLEXA_I18N.en;
+      if (pack && pack[key] != null && pack[key] !== "") return pack[key];
+      return fallback ? fallback[key] : "";
+    };
+
+    let currentLang = "en";
+
+    const resolveInitialLang = () => {
+      try {
+        const saved = localStorage.getItem("flexa-lang");
+        if (saved && FLEXA_LANGS.includes(saved)) return saved;
+      } catch (e) {}
+      return "en";
+    };
+
+    const applyLanguage = (lang) => {
+      if (!window.FLEXA_I18N) return;
+      if (!FLEXA_LANGS.includes(lang)) lang = "en";
+      currentLang = lang;
+      try {
+        localStorage.setItem("flexa-lang", lang);
+      } catch (e) {}
+      document.documentElement.lang = FLEXA_HTML_LANG[lang] || "en";
+      document.documentElement.setAttribute("data-root-lang", lang);
+
+      document.title = t(lang, "meta_title");
+
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) metaDesc.setAttribute("content", t(lang, "meta_description"));
+      const ogTitle = document.querySelector('meta[property="og:title"]');
+      if (ogTitle) ogTitle.setAttribute("content", t(lang, "meta_title"));
+      const ogDesc = document.querySelector('meta[property="og:description"]');
+      if (ogDesc) ogDesc.setAttribute("content", t(lang, "meta_description"));
+      const twTitle = document.querySelector('meta[name="twitter:title"]');
+      if (twTitle) twTitle.setAttribute("content", t(lang, "meta_title"));
+      const twDesc = document.querySelector('meta[name="twitter:description"]');
+      if (twDesc) twDesc.setAttribute("content", t(lang, "meta_description"));
+
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-i18n");
+        if (!key) return;
+        const val = t(lang, key);
+        if (val != null && val !== "") el.textContent = val;
+      });
+
+      document.querySelectorAll("[data-i18n-html]").forEach((el) => {
+        const key = el.getAttribute("data-i18n-html");
+        if (!key) return;
+        const val = t(lang, key);
+        if (val != null && val !== "") el.innerHTML = val;
+      });
+
+      document.querySelectorAll("[data-i18n-aria]").forEach((el) => {
+        const key = el.getAttribute("data-i18n-aria");
+        if (!key) return;
+        const val = t(lang, key);
+        if (val != null && val !== "") el.setAttribute("aria-label", val);
+      });
+
+      document.querySelectorAll("[data-i18n-title]").forEach((el) => {
+        const key = el.getAttribute("data-i18n-title");
+        if (!key) return;
+        const val = t(lang, key);
+        if (val != null && val !== "") el.setAttribute("title", val);
+      });
+
+      const langSwitchGlyphImg = document.getElementById("langSwitchGlyphImg");
+      const langSwitchBtnEn = document.getElementById("langSwitchBtnEn");
+      const activeItem = document.querySelector(`#langSwitchMenu [data-lang="${lang}"]`);
+      if (langSwitchGlyphImg && activeItem) {
+        if (lang === "en") {
+          langSwitchGlyphImg.src = "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f310.png";
+          langSwitchGlyphImg.removeAttribute("srcset");
+        } else {
+          const code = (activeItem.getAttribute("data-lang-code") || "us").toLowerCase();
+          langSwitchGlyphImg.src = `https://flagcdn.com/w40/${code}.png`;
+          langSwitchGlyphImg.srcset = `https://flagcdn.com/w80/${code}.png 2x`;
+        }
+      }
+      if (langSwitchBtnEn && activeItem) {
+        const en = activeItem.getAttribute("data-lang-en");
+        if (en) langSwitchBtnEn.textContent = en;
+      }
+      document.querySelectorAll(".lang-switch__item[data-lang]").forEach((btn) => {
+        btn.classList.toggle("is-active", btn.getAttribute("data-lang") === lang);
+      });
+
+      const comingSoonModalEl = document.getElementById("comingSoonModal");
+      const comingSoonTitleEl = document.getElementById("coming-soon-title");
+      const comingSoonCopyEl = document.getElementById("coming-soon-copy");
+      const comingSoonEyebrowEl = document.getElementById("coming-soon-eyebrow");
+      if (comingSoonModalEl && comingSoonTitleEl && comingSoonCopyEl && comingSoonEyebrowEl) {
+        const product = comingSoonModalEl.dataset.comingSoonProduct;
+        if (product) {
+          const brand = comingSoonModalEl.dataset.comingSoonBrand || "BluPrint";
+          comingSoonEyebrowEl.textContent = `${brand} ${product}`;
+          const titleTpl = t(lang, "coming_soon_title_template").replace(/\{product\}/g, product);
+          comingSoonTitleEl.textContent = titleTpl;
+          const custom = comingSoonModalEl.dataset.comingSoonCustomCopy;
+          comingSoonCopyEl.textContent = custom && custom.trim() !== ""
+            ? custom
+            : t(lang, "coming_soon_copy_template").replace(/\{product\}/g, product);
+        } else {
+          comingSoonEyebrowEl.textContent = "BluPrint";
+          comingSoonTitleEl.textContent = t(lang, "coming_soon_default_title");
+          comingSoonCopyEl.textContent = t(lang, "coming_soon_default_copy");
+        }
+      }
+    };
+
+    let heroCycleToken = 0;
+
+    const startHeroWordmark = () => {
+      const heroWordmark = document.querySelector("[data-hero-wordmark]");
+      const heroWordmarkDynamic = document.querySelector("[data-hero-dynamic]");
+      if (!heroWordmark || !heroWordmarkDynamic) return;
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        heroWordmark.setAttribute("aria-label", t("en", "hero_aria_flexa"));
+        heroWordmark.classList.add("is-finalizing");
+        const words = (t("en", "hero_words") || "").split(",");
+        heroWordmarkDynamic.textContent = (words[0] || "airports").trim();
+        return;
+      }
+      const myToken = ++heroCycleToken;
+      const wait = (ms) => new Promise((resolve) => window.setTimeout(resolve, ms));
+      const cycleHeroWordmark = async () => {
+        const wordsStr = t("en", "hero_words") || "airports,aerodrome,airside,airline,allocation,ai";
+        const heroWords = wordsStr.split(",").map((w) => w.trim()).filter(Boolean);
+        const fixed = t("en", "hero_fixed") || "Flexible";
+        const flexaLabel = t("en", "hero_aria_flexa") || "Flexa";
+        const fixedSpan = document.querySelector(".hero-wordmark-fixed");
+        if (fixedSpan) fixedSpan.textContent = fixed;
+        while (myToken === heroCycleToken) {
+          heroWordmark.classList.remove("is-finalizing");
+          heroWordmarkDynamic.textContent = heroWords[0] || "airports";
+          heroWordmark.setAttribute("aria-label", `${fixed} ${heroWords[0] || ""}`.trim());
+          await wait(820);
+          if (myToken !== heroCycleToken) return;
+
+          for (let index = 0; index < heroWords.length; index += 1) {
+            if (myToken !== heroCycleToken) return;
+            if (index > 0) {
+              heroWordmarkDynamic.classList.add("is-swapping");
+              await wait(180);
+              if (myToken !== heroCycleToken) return;
+            }
+            const nextWord = heroWords[index];
+            heroWordmarkDynamic.textContent = nextWord;
+            heroWordmark.setAttribute("aria-label", `${fixed} ${nextWord}`.trim());
+            heroWordmarkDynamic.classList.remove("is-swapping");
+            await wait(1200);
+            if (myToken !== heroCycleToken) return;
+          }
+
+          heroWordmark.classList.add("is-finalizing");
+          heroWordmark.setAttribute("aria-label", flexaLabel);
+          await wait(1600);
+        }
+      };
+      cycleHeroWordmark();
+    };
+
+    const langSwitch = document.getElementById("langSwitch");
+    const langSwitchBtn = document.getElementById("langSwitchBtn");
+    const langSwitchMenu = document.getElementById("langSwitchMenu");
+
+    const closeLangMenu = () => {
+      if (!langSwitchMenu || !langSwitchBtn) return;
+      langSwitchMenu.hidden = true;
+      langSwitchBtn.setAttribute("aria-expanded", "false");
+    };
+
+    const openLangMenu = () => {
+      if (!langSwitchMenu || !langSwitchBtn) return;
+      langSwitchMenu.hidden = false;
+      langSwitchBtn.setAttribute("aria-expanded", "true");
+    };
+
+    const toggleLangMenu = () => {
+      if (!langSwitchMenu || !langSwitchBtn) return;
+      const open = langSwitchMenu.hidden;
+      if (open) openLangMenu();
+      else closeLangMenu();
+    };
+
+    if (langSwitchBtn && langSwitchMenu) {
+      langSwitchBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        toggleLangMenu();
+      });
+      document.querySelectorAll("#langSwitchMenu [data-lang]").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+          const next = btn.getAttribute("data-lang");
+          if (next && FLEXA_LANGS.includes(next)) {
+            applyLanguage(next);
+            heroCycleToken++;
+            startHeroWordmark();
+            closeLangMenu();
+          }
+        });
+      });
+      document.addEventListener("click", (e) => {
+        if (langSwitch && !langSwitch.contains(e.target)) closeLangMenu();
+      });
+    }
+
+    applyLanguage(resolveInitialLang());
+    startHeroWordmark();
+
     const modalMap = {
       simmula: document.getElementById("simmulaModal"),
       airside: document.getElementById("airsideModal"),
       masterplanner: document.getElementById("masterPlannerModal"),
-      comingSoon: document.getElementById("comingSoonModal")
+      comingSoon: document.getElementById("comingSoonModal"),
+      flexaAbout: document.getElementById("flexaAboutModal")
     };
 
     let activeModal = null;
@@ -2111,6 +2698,11 @@
       if (!activeModal) {
         return;
       }
+      if (activeModal.id === "comingSoonModal") {
+        delete activeModal.dataset.comingSoonProduct;
+        delete activeModal.dataset.comingSoonBrand;
+        delete activeModal.dataset.comingSoonCustomCopy;
+      }
       activeModal.classList.remove("is-open");
       activeModal.setAttribute("aria-hidden", "true");
       document.body.classList.remove("modal-open");
@@ -2134,6 +2726,7 @@
     };
 
     const openModal = (name, trigger) => {
+      closeLangMenu();
       const modal = modalMap[name];
       if (!modal) {
         return;
@@ -2171,19 +2764,22 @@
       });
     });
 
-    const comingSoonTitle = document.getElementById("coming-soon-title");
-    const comingSoonEyebrow = document.getElementById("coming-soon-eyebrow");
-    const comingSoonCopy = document.getElementById("coming-soon-copy");
-    const heroWordmark = document.querySelector("[data-hero-wordmark]");
-    const heroWordmarkDynamic = document.querySelector("[data-hero-dynamic]");
-
     document.querySelectorAll("[data-coming-soon]").forEach((card) => {
       const openComingSoon = () => {
         const brand = card.dataset.comingSoonBrand || "BluPrint";
-        const product = card.dataset.comingSoon;
-        comingSoonEyebrow.textContent = `${brand} ${product}`;
-        comingSoonTitle.textContent = `${product} content will be added soon.`;
-        comingSoonCopy.textContent = card.dataset.comingSoonCopy ?? `${product} is already selectable from the landing page. Detailed content will be filled in next, as requested.`;
+        const product = card.dataset.comingSoon || "";
+        const modalEl = document.getElementById("comingSoonModal");
+        if (modalEl) {
+          modalEl.dataset.comingSoonProduct = product;
+          modalEl.dataset.comingSoonBrand = brand;
+          const custom = card.dataset.comingSoonCopy;
+          if (custom && custom.trim() !== "") {
+            modalEl.dataset.comingSoonCustomCopy = custom;
+          } else {
+            delete modalEl.dataset.comingSoonCustomCopy;
+          }
+        }
+        applyLanguage(currentLang);
         openModal("comingSoon", card);
       };
 
@@ -2201,45 +2797,6 @@
         }
       });
     });
-
-    if (heroWordmark && heroWordmarkDynamic && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      const heroWords = ["airports", "aerodrome", "airside", "airline", "allocation", "ai"];
-      const wait = (ms) => new Promise((resolve) => window.setTimeout(resolve, ms));
-
-      const cycleHeroWordmark = async () => {
-        while (true) {
-          heroWordmark.classList.remove("is-finalizing");
-          heroWordmarkDynamic.textContent = heroWords[0];
-          heroWordmark.setAttribute("aria-label", `Flexible ${heroWords[0]}`);
-          await wait(820);
-
-          for (let index = 0; index < heroWords.length; index += 1) {
-            if (index > 0) {
-              heroWordmarkDynamic.classList.add("is-swapping");
-              await wait(180);
-            }
-
-            const nextWord = heroWords[index];
-            heroWordmarkDynamic.textContent = nextWord;
-            heroWordmark.setAttribute("aria-label", `Flexible ${nextWord}`);
-            heroWordmarkDynamic.classList.remove("is-swapping");
-            await wait(1200);
-          }
-
-          heroWordmark.classList.add("is-finalizing");
-          heroWordmark.setAttribute("aria-label", "Flexa");
-          await wait(1600);
-        }
-      };
-
-      cycleHeroWordmark();
-    } else if (heroWordmark) {
-      heroWordmark.setAttribute("aria-label", "Flexa");
-      if (heroWordmarkDynamic) {
-        heroWordmark.classList.add("is-finalizing");
-        heroWordmarkDynamic.textContent = "airports";
-      }
-    }
 
     document.querySelectorAll("[data-card-modal]").forEach((card) => {
       card.addEventListener("click", (event) => {
@@ -2262,9 +2819,15 @@
     });
 
     document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") {
-        closeModal({ restoreFocus: false });
+      if (event.key !== "Escape") {
+        return;
       }
+      if (langSwitchMenu && !langSwitchMenu.hidden) {
+        closeLangMenu();
+        event.preventDefault();
+        return;
+      }
+      closeModal({ restoreFocus: false });
     });
 
   </script>
