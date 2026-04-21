@@ -474,29 +474,54 @@
       --screen-height: 81.1%;
     }
 
-    .device-stage.masterplanner-stage .device-screen {
-      background: #ffffff;
+    /* Letterbox/pillarbox: video bg is often ignored by the compositor; fill via flex wrapper */
+    .device-stage.masterplanner-stage .device-screen > .mp-screen-fill {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: inherit;
     }
 
-    .device-stage.masterplanner-stage .device-screen video {
+    .device-stage.masterplanner-stage .device-screen > .mp-screen-fill video {
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: 100%;
+      flex: 0 1 auto;
       object-fit: contain;
       object-position: center;
-      background: #ffffff;
+      background: transparent;
+    }
+
+    .device-stage.masterplanner-stage.masterplanner-preview-stage .device-screen > .mp-screen-fill video {
+      transform: translateY(-1%);
     }
 
     .device-stage.masterplanner-stage .device-screen img {
       object-fit: contain;
       object-position: center;
+      transform: none;
+    }
+
+    .device-stage.masterplanner-stage.mp-fill-28 .device-screen > .mp-screen-fill,
+    .device-stage.masterplanner-stage.mp-fill-31 .device-screen > .mp-screen-fill,
+    .device-stage.masterplanner-stage.mp-fill-32 .device-screen > .mp-screen-fill,
+    .device-stage.masterplanner-stage.mp-fill-33 .device-screen > .mp-screen-fill {
+      background: #1a1a1a;
+    }
+
+    .device-stage.masterplanner-stage.mp-fill-29 .device-screen > .mp-screen-fill {
+      background: #0e121e;
+    }
+
+    .device-stage.masterplanner-stage.mp-fill-30 .device-screen > .mp-screen-fill {
+      background: #e8eaef;
+    }
+
+    .device-stage.masterplanner-stage.mp-fill-34 .device-screen > .mp-screen-fill {
       background: #ffffff;
-      transform: scale(1.05);
-    }
-
-    .device-stage.masterplanner-preview-stage .device-screen {
-      background: #f2f2f7;
-    }
-
-    .device-stage.masterplanner-preview-stage .device-screen video {
-      transform: translateY(-2.5%) scale(1.12);
     }
 
     .device-frame {
@@ -783,6 +808,18 @@
     .modal-shell.is-open .modal-card {
       opacity: 1;
       transform: translateY(0) scale(1);
+    }
+
+    /* Master Planner detail only: ~3% larger, but pre-shrink max size so scaled frames stay inside laptop screen (no side/top/bottom clip) */
+    #masterPlannerModal .device-stage.masterplanner-stage .device-screen > .mp-screen-fill video[data-modal-video] {
+      max-width: calc(100% / 1.03);
+      max-height: calc(100% / 1.03);
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      object-position: center;
+      transform: scale(1.03);
+      transform-origin: center center;
     }
 
     .modal-close {
@@ -1199,11 +1236,13 @@
             </div>
 
             <div class="card-device">
-              <div class="device-stage masterplanner-stage masterplanner-preview-stage">
+              <div class="device-stage masterplanner-stage masterplanner-preview-stage mp-fill-29">
                 <div class="device-screen">
-                  <video autoplay muted loop playsinline preload="none" data-autoplay-video poster="web/masterplanner/master-planner-preview-poster.webp" aria-label="BluPrint Master Planner preview">
-                    <source src="web/masterplanner/master-planner-preview.mp4" type="video/mp4">
-                  </video>
+                  <div class="mp-screen-fill">
+                    <video autoplay muted loop playsinline preload="none" data-autoplay-video poster="web/masterplanner/master-planner-preview-poster.webp" aria-label="BluPrint Master Planner preview">
+                      <source src="web/masterplanner/master-planner-preview.mp4" type="video/mp4">
+                    </video>
+                  </div>
                 </div>
                 <img class="device-frame" src="web/airside_sim/macbook-frame.webp" alt="Laptop frame">
               </div>
@@ -1688,11 +1727,13 @@
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
-                <div class="device-stage">
+                <div class="device-stage masterplanner-stage mp-fill-28">
                   <div class="device-screen">
-                    <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/masterplanner/flexible-allocation-by-airline-route-poster.webp" aria-label="Slide 28 video">
-                      <source data-src="web/masterplanner/flexible-allocation-by-airline-route.mp4" type="video/mp4">
-                    </video>
+                    <div class="mp-screen-fill">
+                      <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/masterplanner/flexible-allocation-by-airline-route-poster.webp" aria-label="Slide 28 video">
+                        <source data-src="web/masterplanner/flexible-allocation-by-airline-route.mp4" type="video/mp4">
+                      </video>
+                    </div>
                   </div>
                   <img class="device-frame" src="web/airside_sim/macbook-frame.webp" alt="Laptop frame">
                 </div>
@@ -1706,11 +1747,13 @@
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
-                <div class="device-stage">
+                <div class="device-stage masterplanner-stage mp-fill-29">
                   <div class="device-screen">
-                    <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/masterplanner/master-planner-preview-poster.webp" aria-label="Slide 29 video">
-                      <source data-src="web/masterplanner/master-planner-preview.mp4" type="video/mp4">
-                    </video>
+                    <div class="mp-screen-fill">
+                      <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/masterplanner/master-planner-preview-poster.webp" aria-label="Slide 29 video">
+                        <source data-src="web/masterplanner/master-planner-preview.mp4" type="video/mp4">
+                      </video>
+                    </div>
                   </div>
                   <img class="device-frame" src="web/airside_sim/macbook-frame.webp" alt="Laptop frame">
                 </div>
@@ -1724,11 +1767,13 @@
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
-                <div class="device-stage">
+                <div class="device-stage masterplanner-stage mp-fill-30">
                   <div class="device-screen">
-                    <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/masterplanner/comparison-report-multiple-scenarios-poster.webp" aria-label="Slide 30 video">
-                      <source data-src="web/masterplanner/comparison-report-multiple-scenarios.mp4" type="video/mp4">
-                    </video>
+                    <div class="mp-screen-fill">
+                      <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/masterplanner/comparison-report-multiple-scenarios-poster.webp" aria-label="Slide 30 video">
+                        <source data-src="web/masterplanner/comparison-report-multiple-scenarios.mp4" type="video/mp4">
+                      </video>
+                    </div>
                   </div>
                   <img class="device-frame" src="web/airside_sim/macbook-frame.webp" alt="Laptop frame">
                 </div>
@@ -1742,11 +1787,13 @@
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
-                <div class="device-stage">
+                <div class="device-stage masterplanner-stage mp-fill-31">
                   <div class="device-screen">
-                    <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/masterplanner/global-economic-forecasting-aviation-demand-poster.webp" aria-label="Slide 31 video">
-                      <source data-src="web/masterplanner/global-economic-forecasting-aviation-demand.mp4" type="video/mp4">
-                    </video>
+                    <div class="mp-screen-fill">
+                      <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/masterplanner/global-economic-forecasting-aviation-demand-poster.webp" aria-label="Slide 31 video">
+                        <source data-src="web/masterplanner/global-economic-forecasting-aviation-demand.mp4" type="video/mp4">
+                      </video>
+                    </div>
                   </div>
                   <img class="device-frame" src="web/airside_sim/macbook-frame.webp" alt="Laptop frame">
                 </div>
@@ -1760,11 +1807,13 @@
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
-                <div class="device-stage">
+                <div class="device-stage masterplanner-stage mp-fill-32">
                   <div class="device-screen">
-                    <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/masterplanner/forecasting-methodologies-poster.webp" aria-label="Slide 32 video">
-                      <source data-src="web/masterplanner/forecasting-methodologies.mp4" type="video/mp4">
-                    </video>
+                    <div class="mp-screen-fill">
+                      <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/masterplanner/forecasting-methodologies-poster.webp" aria-label="Slide 32 video">
+                        <source data-src="web/masterplanner/forecasting-methodologies.mp4" type="video/mp4">
+                      </video>
+                    </div>
                   </div>
                   <img class="device-frame" src="web/airside_sim/macbook-frame.webp" alt="Laptop frame">
                 </div>
@@ -1778,11 +1827,13 @@
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
-                <div class="device-stage">
+                <div class="device-stage masterplanner-stage mp-fill-33">
                   <div class="device-screen">
-                    <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/masterplanner/forecasting-methodologies-demand-estimation-poster.webp" aria-label="Slide 33 video">
-                      <source data-src="web/masterplanner/forecasting-methodologies-demand-estimation.mp4" type="video/mp4">
-                    </video>
+                    <div class="mp-screen-fill">
+                      <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/masterplanner/forecasting-methodologies-demand-estimation-poster.webp" aria-label="Slide 33 video">
+                        <source data-src="web/masterplanner/forecasting-methodologies-demand-estimation.mp4" type="video/mp4">
+                      </video>
+                    </div>
                   </div>
                   <img class="device-frame" src="web/airside_sim/macbook-frame.webp" alt="Laptop frame">
                 </div>
@@ -1796,11 +1847,13 @@
             </div>
             <div class="feature-media-shell feature-laptop">
               <div class="feature-media">
-                <div class="device-stage">
+                <div class="device-stage masterplanner-stage mp-fill-34">
                   <div class="device-screen">
-                    <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/masterplanner/peak-hour-xlsx-profiling-automation-poster.webp" aria-label="Slide 34 video">
-                      <source data-src="web/masterplanner/peak-hour-xlsx-profiling-automation.mp4" type="video/mp4">
-                    </video>
+                    <div class="mp-screen-fill">
+                      <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/masterplanner/peak-hour-xlsx-profiling-automation-poster.webp" aria-label="Slide 34 video">
+                        <source data-src="web/masterplanner/peak-hour-xlsx-profiling-automation.mp4" type="video/mp4">
+                      </video>
+                    </div>
                   </div>
                   <img class="device-frame" src="web/airside_sim/macbook-frame.webp" alt="Laptop frame">
                 </div>
