@@ -491,6 +491,14 @@
       transform: scale(1.05);
     }
 
+    .device-stage.masterplanner-preview-stage .device-screen {
+      background: #f2f2f7;
+    }
+
+    .device-stage.masterplanner-preview-stage .device-screen video {
+      transform: translateY(-2.5%) scale(1.12);
+    }
+
     .device-frame {
       position: absolute;
       inset: 0;
@@ -1185,15 +1193,17 @@
             <span class="product-hover-link" aria-hidden="true">Learn more</span>
           </article>
 
-          <article class="product-card" role="button" tabindex="0" aria-label="Select BluPrint Master Planner" data-coming-soon="Master Planner" data-coming-soon-copy="">
+          <article class="product-card" role="button" tabindex="0" aria-label="Select BluPrint Master Planner" data-card-modal="masterplanner">
             <div class="product-top">
               <h2 class="product-title stacked"><span class="product-title-brand">BluPrint</span><span class="product-title-name">Master Planner</span></h2>
             </div>
 
             <div class="card-device">
-              <div class="device-stage masterplanner-stage">
+              <div class="device-stage masterplanner-stage masterplanner-preview-stage">
                 <div class="device-screen">
-                  <img src="web/masterplanner/master-planner-preview-poster.webp" alt="BluPrint Master Planner preview">
+                  <video autoplay muted loop playsinline preload="none" data-autoplay-video poster="web/masterplanner/master-planner-preview-poster.webp" aria-label="BluPrint Master Planner preview">
+                    <source src="web/masterplanner/master-planner-preview.mp4" type="video/mp4">
+                  </video>
                 </div>
                 <img class="device-frame" src="web/airside_sim/macbook-frame.webp" alt="Laptop frame">
               </div>
@@ -1658,6 +1668,163 @@
     </div>
   </div>
 
+  <div class="modal-shell" id="masterPlannerModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="masterplanner-modal-title">
+      <div class="modal-close">
+        <button type="button" aria-label="Close Master Planner detail" data-close-modal>&times;</button>
+      </div>
+      <div class="modal-body">
+        <section class="modal-intro">
+          <small>BluPrint Master Planner</small>
+          <h2 id="masterplanner-modal-title">Allocation, scenarios, and demand insight</h2>
+          <p>Score layouts, compare scenarios, and forecast demand with global economic context.</p>
+        </section>
+
+        <div class="feature-stack">
+          <section class="feature-card">
+            <div class="feature-text">
+              <h3><span class="feature-accent">Flexible allocation</span> allows optimal assignment by <span class="feature-accent">airline</span> and <span class="feature-accent">route</span> at each <span class="feature-accent">terminal</span></h3>
+            </div>
+            <div class="feature-media-shell feature-laptop">
+              <div class="feature-media">
+                <div class="device-stage">
+                  <div class="device-screen">
+                    <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/masterplanner/flexible-allocation-by-airline-route-poster.webp" aria-label="Slide 28 video">
+                      <source data-src="web/masterplanner/flexible-allocation-by-airline-route.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <img class="device-frame" src="web/airside_sim/macbook-frame.webp" alt="Laptop frame">
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="feature-card">
+            <div class="feature-text">
+              <h3><span class="feature-accent">Scoring</span> of each allocation scenario enables selection of the <span class="feature-accent">optimal layout</span></h3>
+            </div>
+            <div class="feature-media-shell feature-laptop">
+              <div class="feature-media">
+                <div class="device-stage">
+                  <div class="device-screen">
+                    <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/masterplanner/master-planner-preview-poster.webp" aria-label="Slide 29 video">
+                      <source data-src="web/masterplanner/master-planner-preview.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <img class="device-frame" src="web/airside_sim/macbook-frame.webp" alt="Laptop frame">
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="feature-card">
+            <div class="feature-text">
+              <h3><span class="feature-accent">Quantitative</span> decision-making supported through a <span class="feature-accent">Comparison Report</span> for <span class="feature-accent">multiple scenarios</span></h3>
+            </div>
+            <div class="feature-media-shell feature-laptop">
+              <div class="feature-media">
+                <div class="device-stage">
+                  <div class="device-screen">
+                    <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/masterplanner/comparison-report-multiple-scenarios-poster.webp" aria-label="Slide 30 video">
+                      <source data-src="web/masterplanner/comparison-report-multiple-scenarios.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <img class="device-frame" src="web/airside_sim/macbook-frame.webp" alt="Laptop frame">
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="feature-card">
+            <div class="feature-text">
+              <h3><span class="feature-accent">Global economic data</span> can be utilized for forecasting <span class="feature-accent">future aviation demand</span></h3>
+            </div>
+            <div class="feature-media-shell feature-laptop">
+              <div class="feature-media">
+                <div class="device-stage">
+                  <div class="device-screen">
+                    <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/masterplanner/global-economic-forecasting-aviation-demand-poster.webp" aria-label="Slide 31 video">
+                      <source data-src="web/masterplanner/global-economic-forecasting-aviation-demand.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <img class="device-frame" src="web/airside_sim/macbook-frame.webp" alt="Laptop frame">
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="feature-card">
+            <div class="feature-text">
+              <h3><span class="feature-accent">Multiple forecasting methodologies</span> can be applied to estimate future demand</h3>
+            </div>
+            <div class="feature-media-shell feature-laptop">
+              <div class="feature-media">
+                <div class="device-stage">
+                  <div class="device-screen">
+                    <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/masterplanner/forecasting-methodologies-poster.webp" aria-label="Slide 32 video">
+                      <source data-src="web/masterplanner/forecasting-methodologies.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <img class="device-frame" src="web/airside_sim/macbook-frame.webp" alt="Laptop frame">
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="feature-card">
+            <div class="feature-text">
+              <h3><span class="feature-accent">Multiple forecasting methodologies</span> can be applied to estimate future demand</h3>
+            </div>
+            <div class="feature-media-shell feature-laptop">
+              <div class="feature-media">
+                <div class="device-stage">
+                  <div class="device-screen">
+                    <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/masterplanner/forecasting-methodologies-demand-estimation-poster.webp" aria-label="Slide 33 video">
+                      <source data-src="web/masterplanner/forecasting-methodologies-demand-estimation.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <img class="device-frame" src="web/airside_sim/macbook-frame.webp" alt="Laptop frame">
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="feature-card">
+            <div class="feature-text">
+              <h3><span class="feature-accent">Automatic generation</span> of XLSX files for <span class="feature-accent">peak hour</span> analysis and profiling, combining historical analysis and future forecasting that previously took months</h3>
+            </div>
+            <div class="feature-media-shell feature-laptop">
+              <div class="feature-media">
+                <div class="device-stage">
+                  <div class="device-screen">
+                    <video autoplay muted loop playsinline preload="none" data-autoplay-video data-modal-video poster="web/masterplanner/peak-hour-xlsx-profiling-automation-poster.webp" aria-label="Slide 34 video">
+                      <source data-src="web/masterplanner/peak-hour-xlsx-profiling-automation.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <img class="device-frame" src="web/airside_sim/macbook-frame.webp" alt="Laptop frame">
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="feature-card">
+            <div class="feature-text">
+              <span class="feature-label">Contact</span>
+              <h3>Contact Us</h3>
+              <p class="contact-note">
+                Organization, consulting / solution type, and project characteristics.
+              </p>
+            </div>
+            <div class="feature-actions">
+              <a class="button button-primary" href="https://forms.office.com/pages/responsepage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAAO__c8PC4lUOVpPQ0pZWVBaWUxOME9VVlAyUVIzNTYxSS4u&amp;route=shorturl">Contact Us</a>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="modal-shell" id="comingSoonModal" aria-hidden="true">
     <div class="modal-backdrop" data-close-modal></div>
     <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="coming-soon-title">
@@ -1678,6 +1845,7 @@
     const modalMap = {
       simmula: document.getElementById("simmulaModal"),
       airside: document.getElementById("airsideModal"),
+      masterplanner: document.getElementById("masterPlannerModal"),
       comingSoon: document.getElementById("comingSoonModal")
     };
 
